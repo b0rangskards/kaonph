@@ -1,0 +1,230 @@
+.modal_form form div.form-group {
+  label {
+    margin-bottom: 5px;
+  }
+  p.help-block {
+    font-size: smaller;
+    text-align: center;
+  }
+}
+.inline-block {
+  display:inline-block;
+}
+.grey {
+  color:grey;
+}
+.top-right {
+  position: fixed;
+  height: 30px;
+  top: -100px;
+  right: -80px;
+}
+.pad-top30{
+  padding-top:30px;
+}
+
+/* Margins */
+
+.mg-btm0 {
+  margin-bottom: 0px;
+}
+.mg-lf0 {
+  margin-left: 0px;
+}
+.mg-rt0 {
+  margin-right: 0px;
+}
+.transparent-nav {
+  border: none;
+  background-color: transparent;
+}
+
+.btn-no-border {
+  text-decoration: none;
+  font-family: Roboto, sans-serif;
+  background: 0 0;
+  padding: 14px 35px;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  border: 2px solid;
+  margin: 0 15px;
+
+  &:hover {
+    color: #95c800;
+  }
+}
+
+.btn-green-border {
+  text-decoration: none;
+  font-family: Roboto, sans-serif;
+  background: 0 0;
+  padding: 14px 35px;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #95c800;
+  border: 2px solid;
+  margin: 0 15px;
+
+  &:hover {
+    color: rgba(0, 0, 0, .3);
+  }
+}
+
+.header {
+  a.add-restaurant-btn {
+    width: 210px;
+  }
+}
+
+.custom-modal {
+
+  .modal-body {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+
+  .modal-header {
+    border-bottom: none;
+    text-align: center;
+
+    h3.modal-title {
+        font-weight: 300;
+        text-align: center;
+        padding: 5px 0px;
+        display: block;
+      span {
+        display: block;
+        width: 60px;
+        height: 1px;
+        background: #95C800;
+        margin: 20px auto -16px auto;
+      }
+    } /* modal-title */
+  }
+
+  form {
+    input:focus,select:focus,textarea:focus {
+      outline: none;
+      border: 1px solid #7CCB18;
+      background: #ffffff;
+      color: #7ccb18;
+      font-size: 16px;
+      font-weight: 300;
+    }
+
+    input[type='submit']{
+        border: none;
+        font: inherit;
+        width: 100%;
+        margin: 0px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        padding: 20px;
+        margin-top: 0px;
+    }
+  }
+
+    div.map-location-picker {
+      width:90%;
+      height: 300px;
+      margin-right: 0px;
+      padding-right: 0px;
+      margin-left: 30px;
+    }
+
+} /* custom-modal */
+
+
+// infobox map
+// address
+.marker_info {
+  span.type {
+    color: #95a5a6;
+  }
+  span.address {
+    margin-top: 10px;
+  }
+}
+
+.no-results-panel {
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+div.editable-food-menu {
+  div.row {
+    div.food-type-group {
+      min-height: 350px;
+      min-width: 330px;
+      border: 5px solid #f5f5f5;
+      background-color: #2c3e50;
+
+      h2 {
+        width: 100%;
+        color: #2ecc71;
+        background-color: rgba(255, 255, 255, .2);
+        padding: 10px;
+        margin: 5px;
+        text-align: center;
+      }
+
+      ul.list-group {
+        a.list-group-item {
+          background-color: transparent;
+          color:#f5f5f5;
+          border:none;
+
+          span.price {
+            color: whitesmoke;
+          }
+
+          button {
+            margin-left:5px;
+            border: none;
+          }
+        }
+
+      }
+    }
+  }
+}
+
+div.check-in-button-group {
+  ul {
+    width: 85px;
+    border: none;
+    box-shadow: none;
+    li {
+      height: 40px;
+      width: 85px;
+      a {
+        padding: 5px;
+        i {
+          font-size: larger;
+        }
+
+      }
+    }
+  }
+}
+
+div.icon_descr_block {
+  div.cols  {
+    div.icons {
+      span {
+        text-align: center;
+        a {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+div#map_get_directions {
+  height: 400px;
+}
