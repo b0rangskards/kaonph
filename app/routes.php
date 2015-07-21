@@ -10,6 +10,87 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
+/* Public Routes for Member/Guest */
+
+use Acme\Restaurants\RestaurantRepository;
+
+Route::get('/home', [
+    'as'   => 'home',
+    'uses' => 'PagesController@home'
+]);
+
+Route::get('/search', [
+	'as'   => 'restaurants.mapsearch',
+	'uses' => 'RestaurantsController@searchMap'
+]);
+
+Route::get('/restaurants/getbyname', [
+	'as'   => 'restaurants.getbyname',
+	'uses' => 'RestaurantsController@getByName'
+]);
+
+Route::get('/restaurants/getdata', [
+	'as'   => 'restaurants.getdata',
+	'uses' => 'RestaurantsController@getData'
+]);
+
+Route::get('/restaurants/getallloved', [
+	'as'   => 'restaurants.getallloved',
+	'uses' => 'RestaurantsController@getAllLoved'
+]);
+
+Route::get('/restaurants/getloved', [
+	'as' => 'restaurants.getloved',
+	'uses' => 'RestaurantsController@getLoved'
+]);
+
+Route::get('/restaurants/getliked', [
+	'as' => 'restaurants.getliked',
+	'uses' => 'RestaurantsController@getLiked'
+]);
+
+Route::get('/restaurants/getdisliked', [
+	'as' => 'restaurants.getdisliked',
+	'uses' => 'RestaurantsController@getDisliked'
+]);
+
+Route::get('/restaurants/getdata/{id}', [
+	'as'   => 'restaurants.find',
+	'uses' => 'RestaurantsController@find'
+]);
+
+Route::get('resturants/getbytype', [
+	'as'   => 'restaurants.getbytype',
+	'uses' => 'RestaurantsController@getByType'
+]);
+
+/* Show Restaurant Menu for Public Users */
+Route::get('/restaurants/{id}/menu', [
+	'as'   => 'foods.index',
+	'uses' => 'FoodsController@index'
+]);
+
+Route::resource('restaurants', 'RestaurantsController');
+
+Route::resource('foods', 'FoodsController', [
+	'except' => ['index']
+]);
+
+Route::get('/test', function(){
+	$repo = new RestaurantRepository();
+
+	$restaus = $repo->getLovedRestaurants(Auth::user()->id);
+
+	dd($restaus->toArray());
+});
+
+Route::get('/places', function(){
+
+});
+
+/* Guest Routes */
+
 Route::group(['before' => 'guest'], function () {
 	// Home Page
 	Route::get('/', [
@@ -32,6 +113,8 @@ Route::group(['before' => 'guest'], function () {
 		'uses' => 'SessionsController@store'
 	]);
 });
+
+/* Member Routes */
 
 Route::group(['before' => 'auth'], function () {
 
@@ -72,40 +155,3 @@ Route::group(['before' => 'auth'], function () {
 	]);
 
 });
-
-
-
-Route::get('/home', [
-    'as' => 'home',
-    'uses' => 'PagesController@home'
-]);
-
-Route::get('/restaurants/getdata', [
-	'as' => 'restaurants.getdata',
-	'uses' => 'RestaurantsController@getData'
-]);
-
-Route::get('/restaurants/getdata/{id}', [
-	'as'   => 'restaurants.find',
-	'uses' => 'RestaurantsController@find'
-]);
-
-
-
-/* Show Restaurant Menu for Public Users */
-Route::get('/restaurants/{id}/menu', [
-	'as'   => 'foods.index',
-	'uses' => 'FoodsController@index'
-]);
-
-Route::resource('restaurants', 'RestaurantsController');
-
-Route::resource('foods', 'FoodsController', [
-	'except' => ['index']
-]);
-
-
-Route::get('/test', function(){
-	dd(Auth::user()->checkedInRestaurants()->toArray());
-});
-

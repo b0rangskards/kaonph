@@ -30,10 +30,12 @@ $(function () {
                     'background:url("' + item.marker_image + '") no-repeat 4px 4px'
                 );
 
+                mapObject.panTo(new google.maps.LatLng(item.lat, item.lng));
+
                 google.maps.event.addListener(marker, 'click', (function () {
-                    closeInfoBox();
-                    getInfoBox(item).open(mapObject, this);
-                    mapObject.setCenter(new google.maps.LatLng(item.lat, item.lng));
+                    //closeInfoBox();
+                    //getInfoBox(item).open(mapObject, this);
+                    mapObject.panTo(new google.maps.LatLng(item.lat, item.lng));
                 }));
             });
         });

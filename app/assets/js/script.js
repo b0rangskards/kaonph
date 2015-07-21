@@ -50,7 +50,6 @@ $(function(){
                 }else {
                     showErrorMessage(jqXHR.responseJSON.error);
                 }
-                console.log(jqXHR.responseJSON);
             })
             .always(function() {
                 inputs.prop('disabled', false);
@@ -83,7 +82,6 @@ $(function(){
                 } else {
                     showErrorMessage(jqXHR.responseJSON.error);
                 }
-                console.log(jqXHR.responseJSON);
             })
             .always(function () {
                 inputs.prop('disabled', false);
@@ -122,6 +120,79 @@ $(function(){
                 button.prop('disabled', false);
                 loader.fadeOut(100);
             });
+    });
+
+    $('#show-cat').on('click', function()
+    {
+        var button = $(this);
+
+        if(button.hasClass('opened')) {
+            button.removeClass('opened')
+                .addClass('closed')
+                .html('Me');
+
+            $('button.cat').fadeOut(400);
+
+        }else {
+            button.addClass('opened')
+                .removeClass('closed')
+                .html('Hide');
+
+            $('button.cat').fadeIn(400);
+        }
+    });
+
+    // Search function for map index
+    $('.head .search-map > input').typeahead({
+        source: function (q, process) {
+            var deffered = $.ajax({
+                method: 'GET',
+                url: '/search',
+                data: {q: q},
+                beforeSend: function () {
+                    $('.search-map-spinner').fadeIn(100);
+                }
+            });
+
+            deffered
+                .done(function (response) {
+                    var data = [],
+                        results = response.data;
+
+                    if (response.message != undefined) return process(data);
+
+                    results.forEach(function (item) {
+                        data.push(item.id + '#' + item.name + '#' + item.type + '#' + item.marker_image + '#' + item.address);
+                    });
+
+                    return process(data);
+                })
+                .always(function () {
+                    $('.search-map-spinner').fadeOut(100);
+                });
+        },
+        highlighter: function (itemRaw) {
+            var item = itemRaw.split('#');
+
+            var html = '<div class="typeahead">';
+            html += '<div class="pull-left"><img src="' + item[3] + '" width="32" height="32" class="img-rounded"></div>';
+            html += '<div class="pull-left margin-small">';
+            html += '<div class="text-left">';
+            html += '<strong>' + item[1] + '</strong>';
+            html += '<span class="text-type">' + item[2] + ' <i class="fa fa-spoon"></i></span>';
+            html += '</div>';
+            html += '<div class="text-left text-address">' + item[4] + '</div>';
+            html += '</div>';
+            html += '<div class="clearfix"></div>';
+            html += '</div>';
+
+            return html;
+        },
+        updater: function (itemRaw) {
+            var item = itemRaw.split('#');
+            return item[1];
+        }
+        //afterSelect: renderResultOnMap
     });
 
 });

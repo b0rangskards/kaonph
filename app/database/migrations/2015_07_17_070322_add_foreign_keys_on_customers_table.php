@@ -29,8 +29,8 @@ class AddForeignKeysOnCustomersTable extends Migration {
 	{
 		Schema::table('customers', function(Blueprint $table)
 		{
-			$table->dropForeign('restaurants_user_id_foreign');
-			$table->dropForeign('restaurants_restaurant_id_foreign');
+			$table->dropForeign('customers_user_id_foreign');
+			$table->dropForeign('customers_restaurant_id_foreign');
 		});
 	}
 

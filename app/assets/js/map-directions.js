@@ -67,12 +67,17 @@ $(function(){
                                 travelMode: google.maps.DirectionsTravelMode.DRIVING
                             },
                             callback: function (results) {
-                                console.log(results);
                                 if(!results) return;
                                 $(this).gmap3({
                                     directionsrenderer: {
                                         options: {
-                                            directions: results
+                                            directions: results,
+                                            suppressMarkers: true,
+                                            polylineOptions: {
+                                                strokeColor: '#2ecc71',
+                                                strokeOpacity: 0.8,
+                                                strokeWeight: 5
+                                            }
                                         }
                                     }
                                 });

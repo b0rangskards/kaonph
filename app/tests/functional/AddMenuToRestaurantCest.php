@@ -29,15 +29,13 @@ class AddMenuToRestaurantCest
     {
 	    $owner = $I->signInAsOwner();
 
-
-	    dd(Auth::check());
 	    $I->am('a added new menu to restaurant with role owner');
 
 	    $I->wantTo('add new menu to restaurant');
 
 	    $I->sendAjaxPostRequest(URL::route(FoodPage::$newFoodRoute), [
-		    'restaurant_id' => $this->foodData['restaurant_id'],
-		    'type_id'       => $this->foodData['type_id'],
+		    'restaurant' => $this->foodData['restaurant_id'],
+		    'type'       => $this->foodData['type_id'],
 		    'name'          => $this->foodData['name'],
 		    'price'         => $this->foodData['price'],
 		    'details'       => $this->foodData['details']

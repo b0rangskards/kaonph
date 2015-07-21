@@ -1,7 +1,8 @@
-@extends('layouts.un-master')
+@extends('layouts.master')
 
 @section('content')
 
-    @include('restaurants.partials._restaurant-list')
+
+
 
 @stop

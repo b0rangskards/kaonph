@@ -5,7 +5,7 @@
 @include('layouts.partials.sm-menu-header')
 
 <!--Header section-->
-<div class="header_section">
+<div class="header_section" style="background-image: url('{{Config::get('constants.DEFAULT_RESTAURANT_LOGO_URL')}}');-webkit-background-size: cover;">
 
     <img src="{{$restaurant->logo ? asset('images/restaurants').'/'.$restaurant->logo : asset('images/c_logo.jpg')}}" alt="">
 
@@ -39,20 +39,24 @@
 <!--icon description block-->
 <div class="icon_descr_block">
     <div class="cols">
-        <div class="icons id_orange">
-            <span class="ic"><i class="fa fa-comments-o"></i></span>
-            <span class="num">1034</span>
-        </div>
-        <div class="icons id_green" data-toggle="tooltip" data-placement="top" title="{{$visitorsList}}">
-            <a href="#" data-toggle="modal" data-target="#visitors_modal">
-                <span class="ic"><i class="fa fa-users"></i></span>
-                <span class="num">{{$visitors->count()}}</span>
-            </a>
+        <div class="icons id_red">
+            <span class="ic"><i class="fa fa-heart-o flat-red"></i></span>
+            <span class="num">{{$ratings['loved_perc']}}%</span>
         </div>
         <div class="icons id_blue">
-            <span class="ic"><i class="fa fa-globe"></i></span>
-            <span class="num">1034</span>
+            <span class="ic"><i class="fa fa-thumbs-up flat-blue"></i></span>
+            <span class="num">{{$ratings['liked_perc']}}%</span>
         </div>
+        <div class="icons id_yellow">
+            <span class="ic"><i class="fa fa-thumbs-down flat-yellow"></i></span>
+            <span class="num">{{$ratings['disliked_perc']}}%</span>
+        </div>
+        {{--<div class="icons id_green" data-toggle="tooltip" data-placement="top" title="{{$visitorsList}}">--}}
+            {{--<a href="#" data-toggle="modal" data-target="#visitors_modal">--}}
+                {{--<span class="ic"><i class="fa fa-users"></i></span>--}}
+                {{--<span class="num">{{$visitors->count()}}</span>--}}
+            {{--</a>--}}
+        {{--</div>--}}
     </div>
 
     <div class="cols">
@@ -89,81 +93,42 @@
 {{--<a href="#" class="green_button">Share this place</a>--}}
 </div>
 <div>
-<div>
-<span>Total Visitors</span>
-419 total
-</div>
-<div>
-<span>Total Visitors</span>
-419 total
-</div>
-</div>
-</div>
-
-{{--<!--Check in-->--}}
-{{--<div class="check_in">--}}
-{{--<div>--}}
-{{--<a href="03.html">Vlad Mickh</a> likes this place. Your Swarm friend <a href="03.html">Mattew</a> has checked in here.--}}
-{{--<div class="users_group">--}}
-{{--<!--user-->--}}
-{{--<a href="03.html" class="user_avatars">--}}
-{{--<div class="user_go">--}}
-{{--<i class="fa fa-link"></i>--}}
-{{--</div>--}}
-{{--<img src="{{asset('images/avatar/ava_3.jpg')}}" alt=""></a>--}}
-{{--<!--user-->--}}
-{{--<a href="03.html" class="user_avatars">--}}
-{{--<div class="user_go">--}}
-{{--<i class="fa fa-link"></i>--}}
-{{--</div>--}}
-{{--<img src="{{asset('images/avatar/ava_4.jpg')}}" alt=""></a>--}}
-{{--</div>--}}
-{{--</div>--}}
-{{--</div>--}}
-
-{{--<!--Mobile visibli-->--}}
-{{--<div class="mobile_place">--}}
-{{--<div class="address">--}}
-{{--Mordovceva street, 6 (Up on"Semenovskaya"), 690091, Vladivostok</div>--}}
-{{--<div class="similar">--}}
-{{--<h3>Similar Restaurants:</h3>--}}
-{{--<div>--}}
-{{--<img src="{{asset('images/avatar/ava_11.jpg')}}" alt="#">--}}
-{{--<a href="#">Cafe "Oki-Doki"</a>--}}
-{{--<i class="icon-heart"></i>34 likes--}}
-{{--</div>--}}
-{{--</div>--}}
-{{--</div>--}}
-
-    <div class="flickr_photo">
-        <h4>Customer Activities</h4>
-        <ul id="basicuse" class="thumbs"></ul>
+    <div>
+        <span>Total Visitors</span>
+        <span data-toggle="tooltip" data-placement="bottom" title="{{$visitorsList}}"><a href="#" data-toggle="modal" data-target="#visitors_modal">{{$visitors->count()}} total</a></span>
     </div>
+</div>
+</div>
 
-    <div class="reviews">
-        <!--reviews-->
-        <h4>145 Reviews:</h4>
-            <!--review-->
-            <div class="rev">
-                <div class="user">
-                        <!--user avatar-->
-                        <a href="03.html" class="user_avatars">
-                    <div class="user_go">
-                        <i class="fa fa-link"></i>
-                    </div>
-                    <img src="{{asset('images/avatar/ava_4.jpg')}}" alt=""></a>
-                </div>
-                <div class="texts">
-                    <div class="head_rev"><a href="03.html">Mattew An</a> <span>12.09.2008</span></div>
-                    <div class="text_rev">Get a history lesson</div>
-                </div>
-            </div>
-    <!--review end-->
-<!--add comment-->
-        <div class="add_comment">
-            <h4>Add comment</h4>
-            <textarea></textarea>
-            <a href="#" class="btn btn-success">Add comment</a>
-        </div>
-    </div>
+    {{--<div class="flickr_photo">--}}
+        {{--<h4>Customer Activities</h4>--}}
+        {{--<ul id="basicuse" class="thumbs"></ul>--}}
+    {{--</div>--}}
+
+    {{--<div class="reviews">--}}
+        {{--<!--reviews-->--}}
+        {{--<h4>145 Reviews:</h4>--}}
+            {{--<!--review-->--}}
+            {{--<div class="rev">--}}
+                {{--<div class="user">--}}
+                        {{--<!--user avatar-->--}}
+                        {{--<a href="03.html" class="user_avatars">--}}
+                    {{--<div class="user_go">--}}
+                        {{--<i class="fa fa-link"></i>--}}
+                    {{--</div>--}}
+                    {{--<img src="{{asset('images/avatar/ava_4.jpg')}}" alt=""></a>--}}
+                {{--</div>--}}
+                {{--<div class="texts">--}}
+                    {{--<div class="head_rev"><a href="03.html">Mattew An</a> <span>12.09.2008</span></div>--}}
+                    {{--<div class="text_rev">Get a history lesson</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+    {{--<!--review end-->--}}
+{{--<!--add comment-->--}}
+        {{--<div class="add_comment">--}}
+            {{--<h4>Add comment</h4>--}}
+            {{--<textarea></textarea>--}}
+            {{--<a href="#" class="btn btn-success">Add comment</a>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 </div>

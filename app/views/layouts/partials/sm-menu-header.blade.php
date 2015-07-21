@@ -16,5 +16,9 @@
         </a>
     @endif
 
-    <input type="text" class="search" placeholder="search">
+        <div class="search-map">
+                    <input class="form-control" type="text" data-provide="typeahead" placeholder="Find a Restaurant" />
+                    <i class="fa fa-spinner fa-spin search-map-spinner"></i>
+        </div>
+    {{--<input type="text" class="search" placeholder="search">--}}
 </div>

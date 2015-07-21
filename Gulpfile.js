@@ -71,15 +71,14 @@ gulp.task('vendor-css', ['cleanVendorCss'], function () {
     return gulp.src([
         dirs.vendor     + 'bootstrap/dist/css/bootstrap.css',
         dirs.vendor     + 'fontawesome/css/font-awesome.css',
-        dirs.vendor     + 'pnotify/pnotify.core.css',
         dirs.vendor     + 'sweetalert/dist/sweetalert.css',
         dirs.vendor     + 'semantic-ui-loader/loader.css',
         dirs.assetsCss  + 'jasny-bootstrap.min.css',
         dirs.assetsCss  + 'pushy.css',
         dirs.vendor     + 'animate.css/animate.css',
-        dirs.assetsCss  + 'select2.css',
         dirs.vendor     + 'semantic-ui-loader/loader.css',
-        dirs.vendor     + 'loading-indicator/dist/loading.min.css'
+        dirs.vendor     + 'loading-indicator/dist/loading.min.css',
+        dirs.vendor     + 'growl/stylesheets/jquery.growl.css'
     ])
         .pipe(concat('vendor.min.css'))
         .pipe(minifyCss({processImport: false}))
@@ -133,12 +132,12 @@ gulp.task('vendor-js', ['cleanVendorJs'], function () {
         dirs.vendor     + 'jquery/dist/jquery.js',
         dirs.vendor     + 'bootstrap/dist/js/bootstrap.js',
         dirs.vendor     + 'sweetalert/dist/sweetalert.min.js',
-        dirs.vendor     + 'pnotify/pnotify.core.js',
         dirs.assetsJs   + 'jasny-bootstrap.min.js',
         dirs.assetsJs   + 'infobox.js',
         dirs.vendor     + 'gmap3/dist/gmap3.js',
-        dirs.assetsJs   + 'select2.js',
-        dirs.vendor     + 'loading-indicator/dist/loading.js'
+        dirs.vendor     + 'loading-indicator/dist/loading.js',
+        dirs.vendor     + 'bootstrap3-typeahead/bootstrap3-typeahead.js',
+        dirs.vendor     + 'growl/javascripts/jquery.growl.js'
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(uglify({mangle: false}))

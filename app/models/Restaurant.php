@@ -46,13 +46,16 @@ class Restaurant extends \Eloquent {
 
 	public function getFoodSpecialty()
 	{
-		return !FoodSpecialty::where('restaurant_id', $this->id)->get()->isEmpty() ? FoodSpecialty::where('restaurant_id', $this->id)->first()->food : false;
+		return !FoodSpecialty::where('restaurant_id', $this->id)
+			->get()
+			->isEmpty()
+			? FoodSpecialty::where('restaurant_id', $this->id)->first()->food
+			: false;
 	}
 
 	public function getVisitors()
 	{
 		return Customer::with('user')
-//			->select(DB::raw('COUNT(user_id) AS num_visits, *'))
 		    ->where('restaurant_id', $this->id)
 			->groupBy('restaurant_id')
 			->orderBy('date_visited', 'DESC')
@@ -79,6 +82,69 @@ class Restaurant extends \Eloquent {
 			$list .= $visitor->user()->first()->email ."\n";
 		}
 		return $list;
+	}
+
+	public function getLovedCustomers()
+	{
+		return Customer::distinct()
+		->select('user_id')
+		->where('restaurant_id', $this->id)
+		->where('rating', '3')
+		->get();
+	}
+
+	public function getJustFineCustomers()
+	{
+		return Customer::distinct()
+			->select('user_id')
+			->where('customers.restaurant_id', $this->id)
+			->where('customers.rating', '2')
+			->get();
+	}
+
+	public function getDislikeCustomers()
+	{
+		return Customer::distinct()
+			->select('user_id')
+			->where('customers.restaurant_id', $this->id)
+			->where('customers.rating', '1')
+			->get();
+	}
+
+	// todo
+	public function getRatings($customers, $restaurantId)
+	{
+		$total = 0; $lovedPercentage = 0;
+		$likedPercentage = 0; $dislikePercentage = 0;
+		$lovedTotal = 0; $likedTotal = 0; $dislikeTotal = 0;
+
+		if ( !$customers->isEmpty() ) {
+			$total = Customer::getDistinctTotalCount($restaurantId);
+
+			$lovedTotal = $this->getLovedCustomers()->count();
+			$likedTotal = $this->getJustFineCustomers()->count();
+			$dislikeTotal = $this->getDislikeCustomers()->count();
+
+			//get percentage
+			$lovedPercentage = $lovedTotal == 0 ? 0 : round(($lovedTotal / $total) * 100);
+			$likedPercentage = $likedTotal == 0 ? 0 : round(($likedTotal / $total) * 100);
+			$dislikePercentage = $dislikeTotal == 0 ? 0 : round(($dislikeTotal / $total) * 100);
+		}
+
+		return [
+			'total'         => $total,
+			'loved_total'   => $lovedTotal,
+			'liked_total'   => $likedTotal,
+			'disliked_total'=> $dislikeTotal,
+			'loved_perc'    => $lovedPercentage,
+			'liked_perc'    => $likedPercentage,
+			'disliked_perc' => $dislikePercentage
+		];
+	}
+
+	public function customers()
+	{
+		return $this->belongsTo('Customer', 'id', 'restaurant_id');
 	}
 
 	public function food()

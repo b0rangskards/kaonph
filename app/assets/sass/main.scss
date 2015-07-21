@@ -228,3 +228,178 @@ div.icon_descr_block {
 div#map_get_directions {
   height: 400px;
 }
+
+.search-box-right {
+  float: right;
+  width: 100%;
+  max-width: 400px;
+}
+
+.header .search-map, .head .search-map{
+  @extend .search-box-right;
+  margin: 27px 30px;
+
+  input {
+    @extend .search-box-right;
+    font-size: 13px;
+    font-style: italic;
+    padding: 0px 10px;
+
+    &:focus {
+      box-shadow: none;
+      border: 1px solid #95c800;
+    }
+  }
+
+  ul.dropdown-menu {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+i.search-map-spinner {
+  float:right;
+  color: #95a5a6;
+  position: absolute;
+  right: 60px;
+  top: 35px;
+  font-size: 18px;
+  display: none;
+}
+
+@media (max-width: 734px) {
+  i.search-map-spinner {
+    right: 60px;
+    top: 90px;
+  }
+}
+
+.typeahead {
+  .margin-small {
+    margin-left: 5px;
+    margin-right: 5px;
+    vertical-align: middle;
+
+    .text-type {
+      float:right;
+      font-size: 12px;
+      color: #bdc3c7;
+    }
+
+    .text-address {
+      font-size: 12px;
+      font-weight: 300;
+      color: #bdc3c7;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 310px;
+    }
+  }
+}
+
+.head .search-map {
+  position: absolute;
+  top: -8px;
+  right: 50px;
+
+}
+
+.flat-red {
+  color: #e74c3c;
+}
+.flat-blue {
+  color: #3498db;
+}
+.flat-yellow {
+  color: #f9bf3b;
+}
+
+div#filter-box {
+  position: absolute;
+  bottom: 10%;
+  left: -30px;
+
+  ul {
+    list-style-type: none;
+        li {
+          background-color: rgba(255, 255, 255, 0.6);
+          margin-top: 5px;
+        }
+    button {
+            background-color: rgba(255, 255, 255, 0.6);
+
+      width: 60px;
+      font-size: 12px;
+      text-align: center;
+      padding: 3px;
+      &.cat {
+        -webkit-transition: -webkit-transform 3s ease-in-out;
+        display: none;
+      }
+      i {
+        font-size: 15px;
+      }
+
+    }
+    #me-li {
+      background-color: rgba(46, 204, 113, 0.8);
+    }
+    #loved-li{
+      background-color: rgba(231, 76, 60, 0.8);
+    }
+
+
+  }
+}
+
+// reposition jquery growl from bottom right add margin top
+.br {
+  margin-bottom: 40px;
+}
+
+.categories-container {
+ ul.categories-list {
+    li {
+      img {
+        width:30px;
+      }
+        a {
+          &:hover {
+            transition: 0.3s;
+          }
+        }
+    }
+
+   li a.fine-dining:hover, li a.shop:focus {
+     background: #F54100;
+   }
+   li a.fastfood:hover, li a.fastfood:focus {
+     background: #00B2B3;
+   }
+   li a.buffet:hover, li a.buffet:focus {
+     background: #FFAC00;
+   }
+   li a.steak-house:hover, li a.steak-house:focus {
+     background: #62B50A;
+   }
+   li a.bbq-grill:hover, li a.bbq-grill:focus {
+     background: #DD3D83;
+   }
+   li a.pizza-burgers:hover, li a.pizza-burgers:focus {
+     background: #006EC6;
+   }
+   li a.filipino:hover, li a.filipino:focus {
+     background: #AAC600;
+   }
+   li a.chinese:hover, li a.chinese:focus {
+     background: red;
+   }
+   li a.japanese:hover, li a.japanese:focus {
+     background: #0081DB;
+   }
+   li a.korean:hover, li a.korean:focus {
+     background: #006BC3;
+   }
+ }
+}

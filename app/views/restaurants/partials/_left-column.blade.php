@@ -15,7 +15,9 @@
             <div>
                 <img src="{{$restau->logo ? asset('images/restaurants').'/'.$restau->logo : asset('images/avatar/ava_11.jpg')}}" alt="#">
                 <a href="#">{{$restau->present()->prettyName}}</a>
-                <i class="fa fa-thumbs-o-up"></i>34 likes
+                @if(!$restau->getLovedCustomers()->isEmpty())
+                    {{$restau->getLovedCustomers()->count()}} users <i class="fa fa-heart-o"></i> this
+                @endif
             </div>
 		@endforeach
 	</div>

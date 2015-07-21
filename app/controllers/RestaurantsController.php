@@ -6,7 +6,9 @@ use Acme\Forms\NewRestaurantForm;
 use Acme\Helpers\DataHelper;
 use Acme\Helpers\ResponseHelper;
 use Acme\Restaurants\NewRestaurantCommand;
+use Acme\Restaurants\RestaurantRepository;
 use Acme\Transformers\RestaurantTransformer;
+use Illuminate\Support\Facades\Response;
 
 class RestaurantsController extends \BaseController {
 
@@ -16,20 +18,26 @@ class RestaurantsController extends \BaseController {
 
 	private $checkinForm;
 
+	private $repository;
+
 	function __construct(NewRestaurantForm $newRestaurantForm,
 	                     RestaurantTransformer $restaurantTransformer,
-	                     CheckinForm $checkinForm)
+	                     CheckinForm $checkinForm,
+	                     RestaurantRepository $repository)
 	{
 		$this->newRestaurantForm = $newRestaurantForm;
 
 		$this->restaurantTransformer = $restaurantTransformer;
 
 		$this->checkinForm = $checkinForm;
+
+		$this->repository = $repository;
 	}
 
 	public function getData()
 	{
-		$restaurants = Restaurant::all();
+		$restaurants = $this->repository->getRestaurantsWithCustomer();
+
 		return Response::json([
 			'data'              => $this->restaurantTransformer->transformCollection($restaurants->all()),
 			'marker'            => Config::get('defaults.MARKER_CONTAINER_URL'),
@@ -39,7 +47,7 @@ class RestaurantsController extends \BaseController {
 
 	public function find($id)
 	{
-		$restaurant = Restaurant::findOrFail($id);
+		$restaurant = Restaurant::with('customers')->findOrFail($id);
 
 		return Response::json([
 			'data'             => $this->restaurantTransformer->transform($restaurant->toArray()),
@@ -61,15 +69,47 @@ class RestaurantsController extends \BaseController {
 		return View::make('restaurants.index', $data);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 * GET /restaurants/create
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function searchMap()
 	{
-		//
+		$query = Input::get('q');
+
+		$restaurants = Restaurant::where('name', 'like', "%$query%")->with('customers')->get();
+
+		if($restaurants->isEmpty()) return Response::json(['message' => 'No Results Found.'], 200);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
+	}
+
+	public function getByName()
+	{
+		$restaurant = Restaurant::whereName(strtolower(Input::get('name')))->get();
+
+		if($restaurant->isEmpty()) return Response::json(['message' => 'Restaurant Not Found.'], 200);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transform($restaurant->first()->toArray()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
+	}
+
+	public function getByType()
+	{
+		$type = strtolower(Input::get('type'));
+
+		$restaurants = Restaurant::whereType($type)->get();
+
+		if ( $restaurants->isEmpty() ) return Response::json(['message' => "There were no $type restaurants."], 200);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
 	}
 
 	/**
@@ -108,7 +148,7 @@ class RestaurantsController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$restaurant = Restaurant::findOrFail($id);
+		$restaurant = Restaurant::with('customers')->findOrFail($id);
 
 		$data['similar'] = Restaurant::whereType($restaurant->type)
 									->where('id', '!=', $id)
@@ -118,6 +158,7 @@ class RestaurantsController extends \BaseController {
 		$data['visitorsList'] = $restaurant->getVisitorsListName();
 
 		$data['restaurant'] = $restaurant;
+		$data['ratings'] = $restaurant->getRatings(Customer::find($restaurant->id)->get(), $restaurant->id);
 
 		return View::make('restaurants.show', $data);
 	}
@@ -140,6 +181,64 @@ class RestaurantsController extends \BaseController {
 
 			return ResponseHelper::errorMessage($errors);
 		}
+	}
+
+	public function getAllLoved()
+	{
+		$restaurants = $this->repository->getAllLovedRestaurants();
+
+		if(count($restaurants) == 0) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
+	}
+
+	public function getLoved()
+	{
+		if( !Auth::check()) return Response::json(['message' => 'Please Login To Contine']);
+
+		$restaurants = $this->repository->getLovedRestaurants(Auth::user()->id);
+
+		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
+	}
+
+	public function getLiked()
+	{
+		if ( !Auth::check() ) return Response::json(['message' => 'Please Login To Contine']);
+
+		$restaurants = $this->repository->getLikedRestaurants(Auth::user()->id);
+
+		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
+	}
+
+	public function getDisliked()
+	{
+		if ( !Auth::check() ) return Response::json(['message' => 'Please Login To Contine']);
+
+		$restaurants = $this->repository->getDislikedRestaurants(Auth::user()->id);
+
+		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+
+		return Response::json([
+			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
+			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
+			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
+		], 200);
 	}
 
 	/**

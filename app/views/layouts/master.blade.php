@@ -20,7 +20,7 @@
 {{--    @include('layouts.partials.categories-menu')--}}
     @yield('content')
 
-    {{ HTML::script('https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing'); }}
+    {{ HTML::script('https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing,places'); }}
     {{ HTML::script('js/vendor.min.js'); }}
     {{ HTML::script('js/script.min.js'); }}
 </body>

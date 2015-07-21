@@ -36,8 +36,8 @@
                   {{Form::label('type', 'What Type of Restaurant: ', ['class' => 'control-label col-md-4'])}}
                   <div class="col-md-8">
                       <select name="type" class="form-control">
-                         @foreach(Config::get('enums.restauTypes') as $unformatted => $formattedType)
-                            <option value="{{$unformatted}}">{{$formattedType}}</option>
+                         @foreach(Config::get('enums.restauTypes') as $value => $type)
+                            <option value="{{$value}}">{{$type['name']}}</option>
                          @endforeach
                       </select>
                       <p class="help-block"></p>

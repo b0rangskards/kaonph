@@ -587,19 +587,19 @@ left: 90px;
 border: 7px solid #e9e5db;
 background: #ffffff;
 }
-.marker_info .info h2 {
+.marker_info .info h3 {
 text-align: center;
-padding-top: 70px;
+padding-top: 60px;
 font-family: 'Roboto', sans-serif;
 font-weight: 300;
 color: #ffffff;
 }
-.marker_info .info h2 span {
+.marker_info .info h3 span {
 width: 70px;
 height: 1px;
 background: #78C803;
 display: block;
-margin: 15px auto;
+margin: 10px auto;
 }
 .marker_info .info span {
 font-family: 'Roboto', sans-serif;
@@ -611,8 +611,30 @@ display: block;
 padding: 0px 30px;
 font-size: 14px;
 }
+.marker_info span.type {
+    color: #95a5a6;
+    margin-top: 0px;
+}
+/* prevent overflow on address in infowindow */
+.marker_info .info span.address {
+    color: #95a5a6;
+    font-size: 13px;
+    margin-top: 5px;
+    overflow-y: hidden;
+    text-overflow: ellipsis;
+    width: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 .marker_info .info a {}
-
+.marker_info div.rate_info {
+    text-align: center;
+}
+.marker_info div.rate_info span {
+  display:inline-block;
+  padding: 5px 10px;
+}
 a.green_btn {
 background: #95c800;
 border: 1px solid #000000;
@@ -634,9 +656,6 @@ color: #95c800;
 box-shadow: none;
 text-decoration: none;
 }
-
-
-
 a.white_btn {
     background: transparent;
     border: 1px solid #ffffff;
@@ -660,10 +679,6 @@ a.white_btn:hover {
     box-shadow: none;
     text-decoration: none;
 }
-
-
-
-
 
 .marker_info .arrow {
 width: 0px;
@@ -764,7 +779,7 @@ text-decoration: none;
 transition: 0.3s;
 }
 
-/*add place*/
+/* Modals */
 .modal_container {
 position: fixed;
 z-index: 99999;
@@ -1058,11 +1073,19 @@ border-right: 10px solid #F3F3F3;
 left: -20px;
 top: 42px;
 }
-.id_blue .num {background: #45c3e8;}
+.id_blue .num {background: #3498db;}
 .id_green .num {background: #97c900;}
 .id_orange .num {background: #ff5700;}
+.id_red .num {background: #e74c3c;}
+.id_yellow .num {background: #f9bf3b; }
+.id_red {
+color: #e74c3c;
+}
+.id_yellow {
+color:#f9bf3b;
+}
 .id_blue {
-color: #45c3e8;
+color: #3498db;
 }
 .id_green {
 color: #97c900;
@@ -2034,6 +2057,7 @@ margin-top: -50px;
 .fourzerofour div a {}
 
 .menu.mobile #close_menu {display: none;}
+
 
 
 

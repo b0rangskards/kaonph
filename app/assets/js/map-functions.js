@@ -30,27 +30,45 @@ function clearOverlays (overlays) {
 function clearMarkers(markers) {
     if(markers.length == 0) return false;
 
-    for (i = 0; i<markers.length; i++) {
-        markers[i].setMap(null);
-    }
+    markers.forEach(function (marker) {
+        marker.setMap(null);
+    });
 }
 
 function toggleMarkers (markers, map) {
-	clearMarkers(markers);
 	closeInfoBox();
 
 	if(markers.length == 0) return false;
 
-    for (i = 0; i < markers.length; i++) {
-      	markers[i].setMap(map);
-      	markers[i].setAnimation(google.maps.Animation.DROP);
-    }
-	//markers[category].forEach(function (marker) {
-	//	marker.setMap(mapObject);
-	//	marker.setAnimation(google.maps.Animation.DROP);
-    //
-	//});
+	markers.forEach(function (marker)
+    {
+        if(marker.getMap() == null) {
+            marker.setMap(map);
+            marker.setAnimation(google.maps.Animation.DROP);
+        }
+
+	});
 };
+
+function toggleDrawingMode(map, drawingManager, markers, overlays )
+{
+    closeInfoBox();
+
+    var currentDrawingMode = drawingManager.getDrawingMode();
+
+    if (currentDrawingMode == google.maps.drawing.OverlayType.MARKER ||
+        currentDrawingMode == null) {
+        drawingManager.setDrawingMode(google.maps.drawing.OverlayType.CIRCLE);
+        showActionGrowl('Drawing Mode');
+    }
+    else if (currentDrawingMode == google.maps.drawing.OverlayType.CIRCLE) {
+        drawingManager.setDrawingMode(null);
+        clearOverlays(overlays);
+        toggleMarkers(markers, map);
+        showActionGrowl('Pan Mode');
+    }
+    return drawingManager.getDrawingMode();
+}
 
 function removeMarkerWithAnimation(marker) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -70,9 +88,14 @@ function getInfoBox(item) {
 		'<div class="marker_info none" id="marker_info">' +
 		'<div class="info" id="info">'+
 		'<img src="' + item.image + '" class="logotype" alt="" height="100px"/>' +
-		'<h2>'+ item.name +'<span></span></h2>' +
+		'<h3>'+ item.name +'<span></span></h3>' +
         '<span class="type"><i class="fa fa-spoon"></i> '+ item.type +'</span>' +
 		'<span class="address">'+ item.address +'</span>' +
+        '<div class="rate_info">' +
+        '<span><i class="fa fa-heart-o flat-red"></i>'+item.loved_percentage+'%</span>' +
+        '<span><i class="fa fa-thumbs-up flat-blue"></i>'+item.liked_percentage+'%</span>' +
+        '<span><i class="fa fa-thumbs-down flat-yellow"></i>'+item.disliked_percentage+'%</span>' +
+        '</div>' +
 		'<a href="'+ item.url_more_info + '" class="green_btn">More info</a>' +
         '<a href="#" data-restaurant-id="'+item.id+'" data-toggle="modal" data-target="#get_directions_modal" class="white_btn get_directions_btn">Get Directions</a>' +
 		'<span class="arrow"></span>' +
@@ -80,7 +103,7 @@ function getInfoBox(item) {
 		'</div>',
 		disableAutoPan: true,
 		maxWidth: 0,
-		pixelOffset: new google.maps.Size(35, -215),
+		pixelOffset: new google.maps.Size(33, -215),
         closeBoxMargin: "3px 3px 3px 3px",
 		isHidden: false,
 		pane: 'floatPane',
@@ -104,7 +127,7 @@ function setDrawingManagerOptions(drawingManager)
         drawingMode: google.maps.drawing.OverlayType.MARKER,
         drawingControl: true,
         drawingControlOptions: {
-            position: google.maps.ControlPosition.BOTTOM_CENTER,
+            position: google.maps.ControlPosition.BOTTOM_LEFT,
             drawingModes: [google.maps.drawing.OverlayType.CIRCLE]
         },
         circleOptions: {
@@ -126,4 +149,11 @@ function checkGeolocationSupport()
         return false;
     }
     return true;
+}
+
+function resetZoom(map)
+{
+    if (map.getZoom() == GMAP.zoom) return;
+
+    map.setZoom(GMAP.zoom);
 }

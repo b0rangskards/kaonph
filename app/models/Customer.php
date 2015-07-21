@@ -11,6 +11,15 @@ class Customer extends \Eloquent {
 		return new static(compact('user_id', 'restaurant_id', 'date_visited', 'rating'));
 	}
 
+	public static function getDistinctTotalCount($restaurantId)
+	{
+		return static::distinct()
+			->select('user_id','rating')
+			->where('restaurant_id', $restaurantId)
+			->get()
+			->count();
+	}
+
 	public function restaurant()
 	{
 		return $this->belongsTo('Restaurant');

@@ -90,10 +90,42 @@ function showSuccessMessage(message, title) {
     });
 }
 
+function showInfoMessage(message, title) {
+    swal({
+        title: title || "Success",
+        text: message,
+        type: "info",
+        timer: 1500
+    });
+}
+
 function showErrorMessage(message, title) {
     swal({
         title: title || 'Error',
         text: message,
         type: "error"
     });
+}
+
+/* Growls */
+
+function showGrowl(title, message, style, isFixed) {
+    $.growl({
+        style: style,
+        title: title,
+        message: message,
+        fixed: isFixed | false,
+        size: 'large',
+        location: 'br'
+    });
+}
+
+function showInfoGrowl(message)
+{
+    showGrowl('', message, 'notice', true);
+}
+
+function showActionGrowl(message)
+{
+    showGrowl('', message, 'default');
 }
