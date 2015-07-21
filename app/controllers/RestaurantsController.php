@@ -158,7 +158,9 @@ class RestaurantsController extends \BaseController {
 		$data['visitorsList'] = $restaurant->getVisitorsListName();
 
 		$data['restaurant'] = $restaurant;
-		$data['ratings'] = $restaurant->getRatings(Customer::find($restaurant->id)->get(), $restaurant->id);
+
+		if( !$restaurant->customers()->get()->isEmpty())
+			$data['ratings'] = $restaurant->getRatings(Customer::find($restaurant->id)->get(), $restaurant->id);
 
 		return View::make('restaurants.show', $data);
 	}
@@ -239,6 +241,11 @@ class RestaurantsController extends \BaseController {
 			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
 			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
 		], 200);
+	}
+
+	public function getPlaces()
+	{
+		$this->repository->getPlacesByCurl();
 	}
 
 	/**

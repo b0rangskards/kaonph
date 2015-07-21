@@ -1,9 +1,14 @@
 <?php  namespace Acme\Restaurants; 
 
 use Acme\Base\BaseRepositoryInterface;
+use Acme\Helpers\DataHelper;
+use Auth;
+use Config;
 use Customer;
 use DB;
+use Faker\Factory\Factory;
 use Restaurant;
+use Faker\Factory as Faker;
 
 class RestaurantRepository implements BaseRepositoryInterface {
 
@@ -63,6 +68,25 @@ class RestaurantRepository implements BaseRepositoryInterface {
 			$query->where('rating', '1');
 		})->with('customers')
 			->get();
+	}
+
+	public function getPlacesByCurl()
+	{
+		$restaurants = DataHelper::getRestaurantsByCurl();
+		$ownerId = Auth::user()->id;
+
+		$ptBRFaker = Faker::create('pt_BR');
+
+		foreach($restaurants as $restaurant) {
+			$r = new Restaurant();
+			$r->owner_id    = $ownerId;
+			$r->name        = $restaurant['name'];
+			$r->address     = $restaurant['address'];
+			$r->type        = 'fine dining';
+			$r->contact_no	= $ptBRFaker->landline;
+			$r->coordinates = $restaurant['coordinates']['lat'] .','. $restaurant['coordinates']['lng'];
+			$r->save();
+		}
 	}
 
 	public function getTableData()

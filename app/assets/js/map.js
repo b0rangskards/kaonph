@@ -21,39 +21,6 @@ var	mapObject,
             // get ajax request to get all restaurants
             var deffered = $.get('/restaurants/getdata');
 
-            var request = {
-              location: mapOptions.center,
-              radius: 500,
-              types: ['restaurant']
-            };
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(mapObject);
-        service.nearbySearch(request, function(results, status){
-            console.log(status);
-            if(status == google.maps.places.PlacesServiceStatus.OK) {
-                for(var i=0; i<results.length; i++){
-                    createMarker(results[i]);
-                    console.log('Name: '+results[i].name);
-                    console.log('Address: '+results[i].vicinity);
-                    console.log('LatLng: '+results[i].geometry.location.A+','+ results[i].geometry.location.F);
-                }
-            }
-        });
-        //
-        function createMarker(place) {
-            var placeLoc = place.geometry.location;
-            var marker = new google.maps.Marker({
-                map: mapObject,
-                position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
-                infowindow.open(mapObject, this);
-            });
-        }
-
-
-
             deffered
                 .done( function( data ) {
                     var items = data.data;

@@ -51,7 +51,6 @@ class NewRestaurantCommandHandler implements CommandHandler {
 
 			$image
 				->resize(220, 180, function($constraint){
-//					$constraint->aspectRatio();
 					$constraint->upsize();
 				})
 				->save(Config::get('constants.RESTAURANT_LOGO_PATH') . $fileName)

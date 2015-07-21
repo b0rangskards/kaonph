@@ -3,22 +3,31 @@
 	<!--map place point-->
 	<div id="map_place" class="map_place"></div>
 	<div class="address">
-		{{$restaurant->address}}
+		{{$restaurant->present()->prettyAddress}}
 	</div>
 
 @if($similar->count() > 0)
+    @include('restaurants.partials._similar-restaurants')
+
 	<!--Similar Place-->
 	<div class="similar">
 		<h3>Similar places:</h3>
 
-        @foreach($similar as $restau)
-            <div>
-                <img src="{{$restau->logo ? asset('images/restaurants').'/'.$restau->logo : asset('images/avatar/ava_11.jpg')}}" alt="#">
-                <a href="#">{{$restau->present()->prettyName}}</a>
-                @if(!$restau->getLovedCustomers()->isEmpty())
-                    {{$restau->getLovedCustomers()->count()}} users <i class="fa fa-heart-o"></i> this
-                @endif
-            </div>
+        @foreach($similar->chunk(5) as $index => $chunksRestau)
+           @if($index == 0)
+                @foreach($chunksRestau as $restau)
+                <div>
+                    <img src="{{$restau->logo ? asset('images/restaurants').'/'.$restau->logo : asset('images/avatar/ava_11.jpg')}}" alt="#">
+                    <a href="#">{{$restau->present()->prettyName}}</a>
+                    @if(!$restau->getLovedCustomers()->isEmpty())
+                        {{$restau->getLovedCustomers()->count()}} {{Str::plural('users', $restau->getLovedCustomers()->count())}}<i class="fa fa-heart-o"></i> this
+                    @endif
+                </div>
+                @endforeach
+           @endif
+            @if($index == 1)
+                <a href="" style="padding-left: 30%;" data-toggle="modal" data-target="#similar_restaurants_modal">Show all</a>
+            @endif
 		@endforeach
 	</div>
 @endif

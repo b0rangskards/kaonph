@@ -41,15 +41,15 @@
     <div class="cols">
         <div class="icons id_red">
             <span class="ic"><i class="fa fa-heart-o flat-red"></i></span>
-            <span class="num">{{$ratings['loved_perc']}}%</span>
+            <span class="num">{{$ratings['loved_perc'] or '0'}}%</span>
         </div>
         <div class="icons id_blue">
             <span class="ic"><i class="fa fa-thumbs-up flat-blue"></i></span>
-            <span class="num">{{$ratings['liked_perc']}}%</span>
+            <span class="num">{{$ratings['liked_perc']  or '0'}}%</span>
         </div>
         <div class="icons id_yellow">
             <span class="ic"><i class="fa fa-thumbs-down flat-yellow"></i></span>
-            <span class="num">{{$ratings['disliked_perc']}}%</span>
+            <span class="num">{{$ratings['disliked_perc']  or '0'}}%</span>
         </div>
         {{--<div class="icons id_green" data-toggle="tooltip" data-placement="top" title="{{$visitorsList}}">--}}
             {{--<a href="#" data-toggle="modal" data-target="#visitors_modal">--}}

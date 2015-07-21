@@ -85,10 +85,6 @@ Route::get('/test', function(){
 	dd($restaus->toArray());
 });
 
-Route::get('/places', function(){
-
-});
-
 /* Guest Routes */
 
 Route::group(['before' => 'guest'], function () {
@@ -153,5 +149,11 @@ Route::group(['before' => 'auth'], function () {
 		'as' => 'restaurant_visits.getdata',
 		'uses' => 'RestaurantVisitsController@getData'
 	]);
+
+	Route::get('/places', [
+		'as' => 'restaurants.places',
+		'uses' => 'RestaurantsController@getPlaces'
+	]);
+
 
 });
