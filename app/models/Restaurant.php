@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Laracasts\Presenter\PresentableTrait;
 
 class Restaurant extends \Eloquent {
 
-	use PresentableTrait;
+	use PresentableTrait, SoftDeletingTrait;
 
 	protected $fillable = ['owner_id', 'name', 'address', 'type', 'coordinates', 'contact_no', 'logo'];
 
@@ -12,6 +13,7 @@ class Restaurant extends \Eloquent {
 
 	protected $presenter = 'Acme\Presenters\RestaurantPresenter';
 
+	protected $dates = ['deleted_at'];
 
 	public function isOwner()
 	{
@@ -28,6 +30,38 @@ class Restaurant extends \Eloquent {
 		return $restaurant;
 	}
 
+	public static function updateRestaurant($id, $name, $address, $type, $contact_no, $coordinates)
+	{
+		$restaurant = static::find($id);
+
+		$restaurant->name = $name;
+		$restaurant->address = $address;
+		$restaurant->type = $type;
+		$restaurant->contact_no = $contact_no;
+		$restaurant->coordinates = $coordinates;
+
+		return $restaurant;
+	}
+
+	public static function closeRestaurant($restaurantId)
+	{
+		$restaurant = static::findOrFail($restaurantId);
+
+		$restaurant->delete();
+
+		return $restaurant;
+	}
+
+	public static function reOpenRestaurant($restaurantId)
+	{
+		$restaurant = static::withTrashed()
+			->findOrFail($restaurantId);
+
+		$restaurant->restore();
+
+		return $restaurant;
+	}
+
 
 	public function newQuery($excludeDeleted = true)
 	{
@@ -39,17 +73,32 @@ class Restaurant extends \Eloquent {
 		return parent::newQuery($excludeDeleted)->addSelect('*', DB::raw($query));
 	}
 
-	public function hasFoodSpecialty()
+	public static function getCancelledFoods($restaurantId)
 	{
-		return $this->getFoodSpecialty() !== false;
+		return Food::onlyTrashed()
+			->where('restaurant_id', $restaurantId)
+			->get();
 	}
 
-	public function getFoodSpecialty()
+	public function getSpecialty()
 	{
-		return !FoodSpecialty::where('restaurant_id', $this->id)
+		return self::getFoodSpecialty($this->id);
+	}
+
+	public static function hasFoodSpecialty($restaurantId)
+	{
+		return self::getFoodSpecialty($restaurantId) !== false;
+	}
+
+	public static function getFoodSpecialty($restaurantId)
+	{
+		$query = Food::where('restaurant_id', $restaurantId)
+			->where('is_specialty', 1);
+
+		return !$query
 			->get()
 			->isEmpty()
-			? FoodSpecialty::where('restaurant_id', $this->id)->first()->food
+			? $query->first()
 			: false;
 	}
 
@@ -61,12 +110,6 @@ class Restaurant extends \Eloquent {
 			->orderBy('date_visited', 'DESC')
 			->get();
 	}
-
-//	public function getVisits()
-//	{
-//		return DB::table('customers')
-//			->select( DB::raw('COUNT(user_id) AS num_visits, *') )
-//	}
 
 	public function getVisitorsListName()
 	{
@@ -140,6 +183,14 @@ class Restaurant extends \Eloquent {
 			'liked_perc'    => $likedPercentage,
 			'disliked_perc' => $dislikePercentage
 		];
+	}
+
+	public function getFoodTypesAvailable()
+	{
+		return Food::with('type')
+			->where('restaurant_id', $this->id)
+			->groupBy('restaurant_id', 'type_id')
+			->get();
 	}
 
 	public function customers()

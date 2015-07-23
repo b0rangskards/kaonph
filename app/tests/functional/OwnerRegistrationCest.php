@@ -18,9 +18,14 @@ class OwnerRegistrationCest
         $I->wantTo('register');
 
         $I->sendAjaxPostRequest(URL::route(RegistrationPage::$routeOwner), [
-            'email' => $this->ownerData['email'],
-            'password' => $this->ownerData['password'],
-            'password_confirmation' => $this->ownerData['password']
+            'email'                 => $this->ownerData['email'],
+            'password'              => $this->ownerData['password'],
+            'password_confirmation' => $this->ownerData['password'],
+	        'firstname'             => $this->ownerData['firstname'],
+			'lastname'              => $this->ownerData['lastname'],
+			'birthdate'             => $this->ownerData['birthdate'],
+			'gender'                => $this->ownerData['gender'],
+	        'occupation'            => $this->ownerData['occupation']
         ]);
 
         $I->seeResponseCodeIs(200);

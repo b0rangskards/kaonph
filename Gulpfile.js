@@ -78,7 +78,10 @@ gulp.task('vendor-css', ['cleanVendorCss'], function () {
         dirs.vendor     + 'animate.css/animate.css',
         dirs.vendor     + 'semantic-ui-loader/loader.css',
         dirs.vendor     + 'loading-indicator/dist/loading.min.css',
-        dirs.vendor     + 'growl/stylesheets/jquery.growl.css'
+        dirs.vendor     + 'growl/stylesheets/jquery.growl.css',
+        //dirs.vendor     + 'iCheck/skins/flat/green.css',
+        dirs.vendor     + 'bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+        dirs.vendor     + 'select2/dist/css/select2.css'
     ])
         .pipe(concat('vendor.min.css'))
         .pipe(minifyCss({processImport: false}))
@@ -137,7 +140,11 @@ gulp.task('vendor-js', ['cleanVendorJs'], function () {
         dirs.vendor     + 'gmap3/dist/gmap3.js',
         dirs.vendor     + 'loading-indicator/dist/loading.js',
         dirs.vendor     + 'bootstrap3-typeahead/bootstrap3-typeahead.js',
-        dirs.vendor     + 'growl/javascripts/jquery.growl.js'
+        dirs.vendor     + 'growl/javascripts/jquery.growl.js',
+        //dirs.vendor     + 'iCheck/icheck.js',
+        dirs.vendor     + 'bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+        dirs.vendor     + 'isotope/dist/isotope.pkgd.js',
+        dirs.vendor     + 'select2/dist/js/select2.js'
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(uglify({mangle: false}))
@@ -171,6 +178,8 @@ gulp.task('cleanImages', function () {
 gulp.task('copy-images', ['cleanImages'], function () {
     return gulp.src([
         dirs.assetsImages + '**/*.*'
+        //dirs.vendor + 'iCheck/skins/flat/green.png',
+        //dirs.vendor + 'iCheck/skins/flat/green@2x.png'
     ])
         .pipe(gulp.dest(dirs.publicImages))
         .pipe(livereload());

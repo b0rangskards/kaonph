@@ -34,6 +34,8 @@ class AddMenuToRestaurantFormCommandHandler implements CommandHandler {
 			$command->details
 		);
 
+		if(Input::has('is_specialty') && Input::get('is_specialty') === 'on') $food->is_specialty = 1;
+
 		if ( Input::hasFile('picture') )
 		{
 			$file = Input::file('picture');

@@ -21,6 +21,7 @@ class CreateFoodsTable extends Migration {
 			$table->decimal('price');
 			$table->string('picture', 100)->nullable();
 			$table->text('details')->nullable();
+			$table->boolean('is_specialty')->nullable();
 			$table->softDeletes();
 			$table->timestamps();
 		});

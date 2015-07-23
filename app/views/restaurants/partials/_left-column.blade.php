@@ -18,7 +18,7 @@
                 @foreach($chunksRestau as $restau)
                 <div>
                     <img src="{{$restau->logo ? asset('images/restaurants').'/'.$restau->logo : asset('images/avatar/ava_11.jpg')}}" alt="#">
-                    <a href="#">{{$restau->present()->prettyName}}</a>
+                    <a href="{{URL::route('restaurants.show', $restau->id)}}">{{$restau->present()->prettyName}}</a>
                     @if(!$restau->getLovedCustomers()->isEmpty())
                         {{$restau->getLovedCustomers()->count()}} {{Str::plural('users', $restau->getLovedCustomers()->count())}}<i class="fa fa-heart-o"></i> this
                     @endif

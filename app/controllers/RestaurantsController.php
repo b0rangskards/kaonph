@@ -3,16 +3,20 @@
 use Acme\CheckIns\CheckInCommand;
 use Acme\Forms\CheckinForm;
 use Acme\Forms\NewRestaurantForm;
+use Acme\Forms\UpdateRestaurantDetailsForm;
 use Acme\Helpers\DataHelper;
 use Acme\Helpers\ResponseHelper;
 use Acme\Restaurants\NewRestaurantCommand;
 use Acme\Restaurants\RestaurantRepository;
+use Acme\Restaurants\UpdateRestaurantDetailsCommand;
 use Acme\Transformers\RestaurantTransformer;
 use Illuminate\Support\Facades\Response;
 
 class RestaurantsController extends \BaseController {
 
 	private $newRestaurantForm;
+
+	private $updateRestaurantDetailsForm;
 
 	private $restaurantTransformer;
 
@@ -21,17 +25,37 @@ class RestaurantsController extends \BaseController {
 	private $repository;
 
 	function __construct(NewRestaurantForm $newRestaurantForm,
+	                     UpdateRestaurantDetailsForm $updateRestaurantDetailsForm,
 	                     RestaurantTransformer $restaurantTransformer,
 	                     CheckinForm $checkinForm,
 	                     RestaurantRepository $repository)
 	{
+		$this->beforeFilter('auth', ['only' => ['index', 'store', 'updateRestaurantDetails']]);
+
+		$this->repository = $repository;
+
 		$this->newRestaurantForm = $newRestaurantForm;
 
 		$this->restaurantTransformer = $restaurantTransformer;
 
 		$this->checkinForm = $checkinForm;
 
-		$this->repository = $repository;
+		$this->updateRestaurantDetailsForm = $updateRestaurantDetailsForm;
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 * GET /restaurants
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		$user = Auth::user();
+		$data['restaurants'] = Restaurant::where('owner_id', $user->id)->latest()->get();
+		$data['closedRestaurants'] = Auth::user()->closedRestaurants();
+
+		return View::make('restaurants.index', $data);
 	}
 
 	public function getData()
@@ -56,24 +80,14 @@ class RestaurantsController extends \BaseController {
 		],200);
 	}
 
-	/**
-	 * Display a listing of the resource.
-	 * GET /restaurants
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$data['restaurants'] = Auth::user()->restaurants()->get();
-
-		return View::make('restaurants.index', $data);
-	}
 
 	public function searchMap()
 	{
 		$query = Input::get('q');
 
-		$restaurants = Restaurant::where('name', 'like', "%$query%")->with('customers')->get();
+		$restaurants = Restaurant::with('customers')
+								->where('name', 'like', "%$query%")
+								->get();
 
 		if($restaurants->isEmpty()) return Response::json(['message' => 'No Results Found.'], 200);
 
@@ -82,6 +96,15 @@ class RestaurantsController extends \BaseController {
 			'marker' => Config::get('defaults.MARKER_CONTAINER_URL'),
 			'defaultThumbnail' => Config::get('defaults.THUMBNAIL_URL')
 		], 200);
+	}
+
+	public function searchResults($q)
+	{
+		$data['query'] = $q;
+
+		$data['results'] = Restaurant::where('name', 'like', "%$q%")->get();
+
+		return View::make('restaurants.search-results', $data);
 	}
 
 	public function getByName()
@@ -137,6 +160,31 @@ class RestaurantsController extends \BaseController {
 
 	      return ResponseHelper::errorMessage($errors);
 	  }
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @return Response
+	 */
+	public function updateRestaurantDetails()
+	{
+		try {
+			$this->updateRestaurantDetailsForm->validate(Input::all());
+
+			$this->execute(UpdateRestaurantDetailsCommand::class);
+
+			$message = ['message'   => 'You have successfully updated your restaurant details.',
+						'redirecTo' => URL::route('restaurants.index')];
+
+			return ResponseHelper::message($message);
+
+		} catch ( Laracasts\Validation\FormValidationException $exception ) {
+
+			$errors = DataHelper::getErrorDataFromException($exception);
+
+			return ResponseHelper::errorMessage($errors);
+		}
 	}
 
 	/**
@@ -219,7 +267,7 @@ class RestaurantsController extends \BaseController {
 
 		$restaurants = $this->repository->getLikedRestaurants(Auth::user()->id);
 
-		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Liked Restaurants at the moment.']);
 
 		return Response::json([
 			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
@@ -234,7 +282,7 @@ class RestaurantsController extends \BaseController {
 
 		$restaurants = $this->repository->getDislikedRestaurants(Auth::user()->id);
 
-		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Loved Restaurants at the moment.']);
+		if ( count($restaurants) == 0 ) return Response::json(['message' => 'No Disliked Restaurants at the moment.']);
 
 		return Response::json([
 			'data' => $this->restaurantTransformer->transformCollection($restaurants->all()),
@@ -249,18 +297,6 @@ class RestaurantsController extends \BaseController {
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 * PUT /restaurants/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
 	 * Remove the specified resource from storage.
 	 * DELETE /restaurants/{id}
 	 *
@@ -269,7 +305,22 @@ class RestaurantsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$restaurant = Restaurant::closeRestaurant($id);
+
+		$message = ['message' => $restaurant->present()->prettyName." closed.",
+					'redirecTo' => URL::route('restaurants.index')];
+
+		return Response::json($message);
+	}
+
+	public function reopen($id)
+	{
+		$restaurant = Restaurant::reOpenRestaurant($id);
+
+		$message = ['message'   => $restaurant->present()->prettyName . " Re-Opened.",
+					'redirecTo' => URL::route('restaurants.index')];
+
+		return Response::json($message);
 	}
 
 

@@ -10,6 +10,8 @@
 <body class="promo">
 
        @include('public.partials._register-modal')
+       {{--@include('registration._registration-modal')--}}
+
        @include('public.partials._register-owner-modal')
        @include('public.partials._login')
 
@@ -31,6 +33,7 @@
             {{HTML::link(URL::route('home'), 'Get started', ['class' => 'green'])}}
             {{HTML::link('#', 'Have Restaurant?', ['class' => 'white_border', 'id' => 'register_owner_btn'])}}
             {{HTML::link('#', 'Register', ['class' => 'green', 'id' => 'register_btn'])}}
+{{--            {{HTML::link('#', 'Register', ['class' => 'green', 'data-toggle' => 'modal', 'data-target' => '#register_public_modal'])}}--}}
             </div>
         </div>
         <div class="bgg"></div>

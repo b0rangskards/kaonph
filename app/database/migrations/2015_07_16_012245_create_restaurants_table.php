@@ -21,8 +21,8 @@ class CreateRestaurantsTable extends Migration {
 			$table->string('type', 50);
 			$table->string('contact_no');
 			$table->string('logo', 100)->nullable();
+			$table->softDeletes();
 			$table->timestamps();
-			$table->timestamp('deleted_at')->nullable();
 		});
 
 		DB::statement('ALTER TABLE restaurants ADD coordinates POINT');

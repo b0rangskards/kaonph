@@ -23,7 +23,12 @@ class UserRegistrationCest
         $I->sendAjaxPostRequest(URL::route(RegistrationPage::$routePublic), [
             'email'                 =>  $this->userData['email'],
             'password'              =>  $this->userData['password'],
-            'password_confirmation' =>  $this->userData['password']
+            'password_confirmation' =>  $this->userData['password'],
+	        'firstname'             =>  $this->userData['firstname'],
+	        'lastname'              =>  $this->userData['lastname'],
+	        'birthdate'             =>  $this->userData['birthdate'],
+	        'gender'                =>  $this->userData['gender'],
+	        'occupation'            =>  $this->userData['occupation']
         ]);
 
         $I->seeResponseCodeIs(200);

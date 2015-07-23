@@ -24,6 +24,15 @@ class RestaurantTransformer extends Transformer {
 				'liked_total'         => $ratings['liked_total'],
 				'disliked_total'      => $ratings['disliked_total']
 				];
+		}else{
+			$array = [
+				'loved_percentage' => 0,
+				'liked_percentage' => 0,
+				'disliked_percentage' => 0,
+				'loved_count' => 0,
+				'liked_total' => 0,
+				'disliked_total' => 0
+			];
 		}
 
 		return array_merge($array, [

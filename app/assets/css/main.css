@@ -817,7 +817,7 @@ font-size: 11px;
 text-transform: uppercase;
 display: block;
 padding: 0px 30px;
-margin: 20px 0px 20px 0px;
+margin: 5px 0px 5px 0px;
 }
 .modal_form label input {
 display: block;
@@ -865,6 +865,133 @@ border-top-right-radius: 0px;
 padding: 20px;
 margin-top: 18px;
 }
+/* Big Modal */
+.lg_modal_container {
+    position: fixed;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.83);
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    transition: 0.3s linear;
+}
+
+.lg_modal_form {
+    width: 600px;
+    background: #ffffff;
+    border-radius: 4px;
+    margin: 0 auto;
+    top: 42%;
+    position: relative;
+    height: 610px;
+    margin-top: -265px;
+}
+.lg_modal_form fieldset legend {
+    padding-left:30px;
+    margin-bottom: 10px;
+}
+.lg_modal_form h3 {
+    font-weight: 300;
+    text-align: center;
+    padding: 15px 0px;
+    display: block;
+}
+
+.lg_modal_form h3 span {
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: #95C800;
+    margin: 10px auto -16px auto;
+}
+.lg_modal_form label {
+    font-size: 11px;
+    text-transform: uppercase;
+    display: block;
+    padding: 0px 30px;
+    margin-bottom: 5px;
+}
+.lg_modal_form label input, .lg_modal_form div.col-md-6 input{
+    display: block;
+    width: 90%;
+    height: 35px;
+    border-radius: 3px;
+    border: 1px solid #DDDDDD;
+    background: #F9F9F9;
+    padding: 0px 10px;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 300;
+}
+.lg_modal_form label div input {
+    width:45%;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+}
+.lg_modal_form div.col-md-6 {
+    padding: 0px 0px;
+    margin-bottom: 20px;
+}
+.lg_modal_form div.col-md-6 label {
+    width: 35%;
+    padding: 5px 0px;
+    margin: 5px 0px;
+}
+
+.lg_modal_form div.col-md-6:first-child label {
+    padding: 5px 30px;
+}
+
+.lg_modal_form div.col-md-6 input {
+    margin: 0px 30px;
+    width: 80%;
+}
+.lg_modal_form div.col-md-6 select {
+    display: inline-block;
+    height: 35px;
+    border-radius: 3px;
+    border: 1px solid #DDDDDD;
+    background: #F9F9F9;
+    padding: 0px 10px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.lg_modal_form label input:focus {
+    outline: none;
+    border: 1px solid #7CCB18;
+    background: #ffffff;
+    color: #7ccb18;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.lg_modal_form label select {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    height: 30px;
+}
+.lg_modal_form a, .lg_modal_form input[type='submit'] {
+    display: block;
+    text-transform: capitalize;
+    text-align: center;
+    border: none;
+    font: inherit;
+    width: 600px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin: 0px;
+    margin-left:-15px;
+    overflow: hidden;
+    height: 60px;
+    float: none;
+}
+.lg_modal_form p.help-block {
+    margin-left:30px;
+}
+/* End Modal */
 /*login form*/
 .login_form {height: 400px;}
 .login_form a i {
@@ -1461,6 +1588,7 @@ padding: 0px 30px 30px;
 .place_gr_cont * {transition:0.3s;}
 
 .place_gr_cont .pg {
+    border: 3px solid black;
 width: 50%;
 padding: 30px;
 min-height: 300px;
@@ -1469,6 +1597,12 @@ background-size: cover !important;
 position: relative;
 max-height: 300px;
 overflow: hidden;
+}
+.pg .p_cont span.type{
+    display:inline-block;
+    float:right;
+    font-size: 14px;
+    color: #95a5a6;
 }
 .place_gr_cont .pg img{
 position: absolute;
@@ -1640,14 +1774,15 @@ position: relative;
 
 
 .place_li_cont .style_list {
-margin-bottom: -1px;
+/*margin-bottom: -1px;*/
 position: relative;
 }
 
 .place_li_cont .style_list img {
 display: block;
 float: left;
-max-width: 199px;
+width: 199px;
+height: 150px;
 }
 .place_li_cont .style_list div h2 {
 color: #333333;
@@ -1679,10 +1814,23 @@ margin-bottom: 14px;
 .place_li_cont .style_list .con {
 border-top: 1px solid #E5E5E5;
 border-bottom: 1px solid #E5E5E5;
-height: 200px;
+height: 150px;
 padding-left: 220px;
 }
+.place_li_cont .con .restaurant-details span{
+    margin-bottom: 0px;
+    color: #7f8c8d;
+}
+.place_li_cont .con .restaurant-tools span {
+    margin: 15px;
+}
+.place_li_cont .con .menu-list {
+    padding-top: 15px;
+}
 
+.place_li_cont .con .menu-list h4 {
+    color: #7f8c8d;
+}
 .place_li_cont .comm i {
 display: block;
 float: left;

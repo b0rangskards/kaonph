@@ -1,8 +1,9 @@
 @extends('layouts.un-master')
 
+    @include('public.partials._register-modal')
+
 @section('content')
 
-    @include('layouts.partials.sm-menu-header')
 
     @include('foods.partials._new-menu-modal')
 

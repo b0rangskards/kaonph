@@ -96,7 +96,7 @@ var	mapObject,
 
 
     // Search function for map index
-    $('.search-map>input').typeahead({
+    $('#search-restaurant-map>input').typeahead({
         source: function(q, process)
         {
             var deffered =  $.ajax({
@@ -152,7 +152,7 @@ var	mapObject,
     });
 
     // show all markers if value on search input is null
-    $('.search-map>input').on('input', function(){
+    $('#search-restaurant-map>input').on('input', function(){
         var value = $(this).val();
 
         if(value != '') return;
@@ -257,7 +257,7 @@ var	mapObject,
         deffered.done(function (response) {
             if (response.message != undefined) {
                 toggleMarkers(markers, mapObject);
-                showInfoMessage(response.message, 'No Loved Restaurant found.');
+                showInfoMessage(response.message, 'No Liked Restaurant found.');
                 return;
             }
             clearMarkers(markers);
@@ -285,7 +285,7 @@ var	mapObject,
         deffered.done(function (response) {
             if (response.message != undefined) {
                 toggleMarkers(markers, mapObject);
-                showInfoMessage(response.message, 'No Loved Restaurant found.');
+                showInfoMessage(response.message, 'No Disliked Restaurant found.');
                 return;
             }
             clearMarkers(markers);

@@ -1,23 +1,79 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Laracasts\Presenter\PresentableTrait;
 
 class Food extends \Eloquent {
 
-	use PresentableTrait;
+	use PresentableTrait, SoftDeletingTrait;
 
-	protected $fillable = ['restaurant_id', 'type_id', 'name', 'price', 'details', 'picture'];
+	protected $fillable = ['restaurant_id', 'type_id', 'name', 'price', 'details', 'picture', 'is_specialty'];
 
 	protected $presenter = 'Acme\Presenters\FoodPresenter';
+
+	protected $dates = ['deleted_at'];
 
 	public static function newMenu($restaurant_id, $type_id, $name, $price, $details)
 	{
 		return new static(compact('restaurant_id', 'type_id', 'name', 'price', 'details'));
 	}
 
+	public static function updateMenu($food_id, $type_id, $name, $price, $details)
+	{
+		$food = static::findOrFail($food_id);
+
+		$food->type_id = $type_id;
+		$food->name = $name;
+		$food->price = $price;
+		$food->details = $details;
+
+		return $food;
+	}
+
+	public static function makeSpecialty($foodId)
+	{
+		$food = static::findOrFail($foodId);
+
+		$food->is_specialty = 1;
+
+		return $food;
+	}
+
+	public static function cancelSpecialty($foodId)
+	{
+		$food = static::findOrFail($foodId);
+
+		$food->is_specialty = 0;
+
+		return $food;
+	}
+
+	public static function cancelFood($foodId)
+	{
+		$food = static::findOrFail($foodId);
+
+		$food->is_specialty = 0;
+		$food->save();
+
+		$food->delete();
+
+
+		return $food;
+	}
+
+	public static function offerFood($foodId)
+	{
+		$food = static::withTrashed()
+			->findOrFail($foodId);
+
+		$food->restore();
+
+		return $food;
+	}
+
 	public function isASpecialty()
 	{
-		return ! FoodSpecialty::where('food_id', $this->id)->get()->isEmpty();
+		return $this->is_specialty === 1;
 	}
 
 	public function type()

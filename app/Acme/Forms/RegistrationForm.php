@@ -12,7 +12,11 @@ class RegistrationForm extends FormValidator {
     protected $rules = [
 
         'email'     =>      'required|email|unique:users',
-        'password'  =>      'required|alpha_num|min:6|confirmed'
+        'password'  =>      'required|alpha_num|min:6|confirmed',
+	    'firstname' =>      'required|min:3',
+	    'lastname'  =>      'required|min:3',
+	    'birthdate' =>      'required|date',
+	    'gender'    =>      'required|min:4|max:6',
 
     ];
 

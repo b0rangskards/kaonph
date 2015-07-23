@@ -3,5 +3,6 @@
  */
 $(function(){
 
+//$('#select2-location').select2();
 
 });

@@ -1,24 +1,43 @@
 <?php
 
 use Acme\Foods\AddMenuToRestaurantFormCommand;
+use Acme\Foods\FoodRepository;
+use Acme\Foods\UpdateMenuCommand;
 use Acme\Forms\AddMenuToRestaurantForm;
 use Acme\Forms\MakeFoodSpecialtyForm;
+use Acme\Forms\UpdateMenuForm;
 use Acme\Helpers\DataHelper;
 use Acme\Helpers\ResponseHelper;
+use Acme\Transformers\FoodTransformer;
 use Laracasts\Flash\Flash;
 
 class FoodsController extends \BaseController {
 
 	private $addMenuToRestaurantForm;
 
+	private $updateMenuForm;
+
 	private $makeFoodSpecialtyForm;
 
-	function __construct(AddMenuToRestaurantForm $addMenuToRestaurantForm,
+	private $repository;
+
+	private $transformer;
+
+	function __construct(FoodRepository $repository,
+	                     FoodTransformer $transformer,
+	                     AddMenuToRestaurantForm $addMenuToRestaurantForm,
+	                     UpdateMenuForm $updateMenuForm,
 						 MakeFoodSpecialtyForm $makeFoodSpecialtyForm)
 	{
+		$this->repository = $repository;
+
 		$this->addMenuToRestaurantForm = $addMenuToRestaurantForm;
 
+		$this->updateMenuForm = $updateMenuForm;
+
 		$this->makeFoodSpecialtyForm = $makeFoodSpecialtyForm;
+
+		$this->transformer = $transformer;
 	}
 
 
@@ -30,7 +49,16 @@ class FoodsController extends \BaseController {
 	 */
 	public function index($id)
 	{
-		$data['restaurant'] = Restaurant::findOrFail($id);
+		$restaurant = Restaurant::with(['menu' => function($query){
+			$query->with('type');
+		}])
+		->findOrFail($id);
+
+		$data['restaurant'] = $restaurant;
+
+		$data['foods']      = $restaurant->getFoodTypesAvailable();
+
+		Log::info($data['foods']);
 
 		return View::make('foods.index', $data);
 	}
@@ -38,6 +66,7 @@ class FoodsController extends \BaseController {
 	public function showEditMenu($id)
 	{
 		$data['restaurant'] = Restaurant::findOrFail($id);
+		$data['cancelledFoods'] = Restaurant::getCancelledFoods($id);
 
 		return View::make('foods.edit-menu', $data);
 	}
@@ -51,60 +80,44 @@ class FoodsController extends \BaseController {
 
 			$this->makeFoodSpecialtyForm->validate($inputs);
 
-			$foodId = Input::get('food_id');
+			// Cancel any food specialty if has one
+			if($specialty = Restaurant::getFoodSpecialty($inputs['restaurant_id']))
+			{
+				$specialty = Food::cancelSpecialty($specialty->id);
+				$this->repository->save($specialty);
+			}
 
-			$restaurant = Restaurant::find($id);
+			$food = Food::makeSpecialty($inputs['food_id']);
 
-			$food = Food::find($foodId);
+			$this->repository->save($food);
 
-			if ( !$restaurant->isOwner() ) return Redirect::back()->withErrors(['error' => 'User Unauthorized.']);
+			$message = [
+				'message' => "You have a new specialty",
+				'redirecTo' => URL::route('foods.editmenu', $food->restaurant_id)
+			];
 
-			FoodSpecialty::create([
-				'restaurant_id' => $id,
-				'food_id'       => $foodId
-			]);
-
-			Flash::overlay( $food->present()->prettyName . ' is now our new specialty.', 'Food Specialty');
-
-			return Redirect::back();
+			return Response::json($message);
 
 		} catch ( Laracasts\Validation\FormValidationException $exception ) {
 
-			Flash::overlay('Cannot make food as Specialty', 'Error Occured');
+			$error = DataHelper::getErrorDataFromException($exception);
 
-			return Redirect::back()->withErrors($exception->getErrors()->toArray());
-
+			return Response::json($error, 400);
 		}
 	}
 
 	public function cancelSpecialty($id)
 	{
-		try {
-			$foodId = Input::get('food_id');
+		$food = Food::cancelSpecialty(Input::get('food_id'));
 
-			$restaurant = Restaurant::find($id);
+		$this->repository->save($food);
 
-			if ( !$restaurant->isOwner() ) return Redirect::back()->withErrors(['error' => 'User Unauthorized.']);
+		$message = [
+			'message' => "You have currently no specialty. \n Please pick a new one.",
+			'redirecTo' => URL::route('foods.editmenu', $food->restaurant_id)
+		];
 
-			$sp = FoodSpecialty::where('food_id', $foodId)->get();
-
-			if($sp->isEmpty()) return Redirect::back()->withErrors(['error' => 'Cannot find food as specialty.']);
-
-			$sp = $sp->first();
-
-			$sp->delete();
-
-			Flash::overlay('Cancelled specialty.', 'Food Specialty');
-
-			return Redirect::back();
-
-		} catch ( Laracasts\Validation\FormValidationException $exception ) {
-
-			Flash::overlay('Cannot cancel food as Specialty', 'Error Occured');
-
-			return Redirect::back()->withErrors($exception->getErrors()->toArray());
-
-		}
+		return Response::json($message);
 	}
 
 	/**
@@ -133,6 +146,18 @@ class FoodsController extends \BaseController {
 
 			return ResponseHelper::errorMessage($errors);
 		}
+	}
+
+	public function find($id)
+	{
+		$food = Food::with('restaurant')
+			->find($id);
+
+		if(!$food) return Response::json(['error' => 'Cannot find specified id'], 400);
+
+		return Response::json([
+			'data' => $this->transformer->transform($food->toArray())
+		], 200);
 	}
 
 	/**
@@ -166,9 +191,38 @@ class FoodsController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function updateMenu($id)
 	{
-		//
+		try {
+			$this->updateMenuForm->validate(Input::all());
+
+			$this->execute(UpdateMenuCommand::class);
+
+			$restaurantId = Input::get('restaurant');
+
+			$message = ['message' => 'You have Successfully updated your menu.',
+				'redirecTo' => URL::route('foods.editmenu', $restaurantId)];
+
+			return ResponseHelper::message($message);
+
+		} catch ( Laracasts\Validation\FormValidationException $exception ) {
+
+			$errors = DataHelper::getErrorDataFromException($exception);
+
+			return ResponseHelper::errorMessage($errors);
+		}
+	}
+
+	public function restoreFood($id)
+	{
+		$food = Food::offerFood(Input::get('food_id'));
+
+		Log::info($food->name);
+
+		$message = ['message' => 'Food Offered back on menu.',
+			'redirecTo' => URL::route('foods.editmenu', $food->restaurant_id)];
+
+		return Response::json($message);
 	}
 
 	/**
@@ -180,7 +234,12 @@ class FoodsController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$food = Food::cancelFood($id);
+
+		$message = ['message' => 'Food cancelled.',
+					'redirecTo' => URL::route('foods.editmenu', $food->restaurant_id)];
+
+		return Response::json($message);
 	}
 
 }

@@ -24,7 +24,12 @@ class RegistrationCommandHandler implements CommandHandler {
     {
         $user = User::registerPublicUser(
           $command->email,
-          $command->password
+          $command->password,
+          $command->firstname,
+          $command->lastname,
+          $command->birthdate,
+          $command->gender,
+          $command->occupation
         );
 
         $this->repository->save( $user);

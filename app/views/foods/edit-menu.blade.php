@@ -5,6 +5,11 @@
 
 @section('content')
 
-    @include('foods.partials._edit-menu')
+    @include('foods.partials._cancelled-foods-list-modal')
+
+    @include('foods.partials._edit-menu-modal')
+
+    @include('foods.partials._edit-menu-body')
+
 
 @stop

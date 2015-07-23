@@ -25,6 +25,8 @@ class RegistrationController extends \BaseController {
 	{
         try
         {
+	        Log::info(Input::all());
+
             $this->registrationForm->validate(Input::all());
 
             $this->execute(RegistrationCommand::class);

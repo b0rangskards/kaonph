@@ -60,27 +60,35 @@
 
           </div>
 
-          <div class="form-group col-md-6">
-                {{Form::label('logo', 'Upload Photo', ['class' => 'control-label'])}}
-                <div class="fileupload fileinput-new margin-bottom-10" data-provides="fileinput">
-                    <div class="col-md-12">
-                      <div class="fileinput-new thumbnail" data-trigger="fileinput">
-                            <img src="{{asset('/images/no_img.png')}}" alt="" />
-                            </div>
-                            <div class="fileinput-preview fileinput-exists thumbnail"></div>
-                    </div>
-                    <div class="upload-btns">
-                         <span class="btn btn-round btn-default btn-file">
-                             <span class="fileinput-new"><i class="fa fa-paperclip"></i></span>
-                             <span class="fileinput-exists"><i class="fa fa-paperclip"></i></span>
-                             {{Form::file('picture', ['class' => 'default'])}}
-                         </span>
-                         <a href="#" class="btn btn-round btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
-                         <small><span class="label label-danger">NOTE!</span></small>
-                         <small><i>Optional. Only image files are allowed to upload.</i></small>
-                    </div>
+          <div class="col-md-6">
+                <div class="form-group">
+                    {{Form::label('logo', 'Make This As Specialty', ['class' => 'control-label'])}}
+                      <input type="checkbox" name="is_specialty" />
+                      <p class="help-block"></p>
                 </div>
-                <p class="help-block"></p>
+
+                <div class="form-group">
+                    {{Form::label('logo', 'Upload Photo', ['class' => 'control-label'])}}
+                    <div class="fileupload fileinput-new margin-bottom-10" data-provides="fileinput">
+                        {{--<div class="col-md-12">--}}
+                          <div class="fileinput-new thumbnail" data-trigger="fileinput">
+                                <img src="{{asset('/images/no_img.png')}}" alt="" style="height: 160px;"/>
+                                </div>
+                                <div class="fileinput-preview fileinput-exists thumbnail" style="max-height: 160px;"></div>
+                        {{--</div>--}}
+                        <div class="upload-btns">
+                             <span class="btn btn-round btn-default btn-file">
+                                 <span class="fileinput-new"><i class="fa fa-paperclip"></i></span>
+                                 <span class="fileinput-exists"><i class="fa fa-paperclip"></i></span>
+                                 {{Form::file('picture', ['class' => 'default'])}}
+                             </span>
+                             <a href="#" class="btn btn-round btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                             <small><span class="label label-danger">NOTE!</span></small>
+                             <small><i>Optional. Only image files are allowed to upload.</i></small>
+                        </div>
+                    </div>
+                    <p class="help-block"></p>
+                </div>
           </div>
 
           <div class="form-group mg-btm0">

@@ -1,6 +1,7 @@
 <?php  namespace Acme\Forms; 
 
 use Laracasts\Validation\FormValidator;
+use Restaurant;
 
 class MakeFoodSpecialtyForm extends FormValidator {
 
@@ -12,9 +13,8 @@ class MakeFoodSpecialtyForm extends FormValidator {
 	 */
 	protected $rules = [
 
-
-		'restaurant_id' => 'required|exists:restaurants,id',
-		'food_id'       => 'required|exists:foods,id'
+		'restaurant_id' => 'required|numeric|exists:restaurants,id',
+		'food_id'       => 'required|numeric|exists:foods,id'
 
 	];
 

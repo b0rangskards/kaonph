@@ -9,7 +9,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait, SoftDeletingTrait;
 
-    protected $fillable = ['role_id', 'email', 'password'];
+    protected $fillable = ['role_id', 'email', 'password', 'firstname', 'lastname', 'birthdate', 'gender', 'occupation'];
 
     /**
 	 * The database table used by the model.
@@ -33,27 +33,27 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
 
-    public static function register($roleId, $email, $password)
+    public static function register($roleId, $email, $password, $firstname, $lastname, $birthdate, $gender, $occupation)
     {
-        $user = new static(compact('email', 'password'));
+        $user = new static(compact('email', 'password', 'email', 'password', 'firstname', 'lastname', 'birthdate', 'gender', 'occupation'));
 
         $user->role_id = $roleId;
 
         return $user;
     }
 
-    public static function registerPublicUser($email, $password)
+    public static function registerPublicUser($email, $password, $firstname, $lastname, $birthdate, $gender, $occupation)
     {
         $publicUserId = Config::get('enums.roles.public');
 
-        return static::register($publicUserId, $email, $password);
+        return static::register($publicUserId, $email, $password, $firstname, $lastname, $birthdate, $gender, $occupation);
     }
 
-    public static function registerOwner($email, $password)
+    public static function registerOwner($email, $password, $firstname, $lastname, $birthdate, $gender, $occupation)
     {
         $ownerRoleId = Config::get('enums.roles.owner');
 
-        return static::register($ownerRoleId, $email, $password);
+        return static::register($ownerRoleId, $email, $password, $firstname, $lastname, $birthdate, $gender, $occupation);
     }
 
 	public function checkedInRestaurantsHistory()
@@ -70,6 +70,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 			->where('user_id', $this->id)
 			->groupBy('restaurant_id')
 			->orderBy('date_visited', 'DESC')
+			->get();
+	}
+
+	public function closedRestaurants()
+	{
+		return Restaurant::onlyTrashed()
+			->where('owner_id', $this->id)
 			->get();
 	}
 
@@ -102,6 +109,26 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      *
      * @param $password
      */
+	public function setFirstnameAttribute($value)
+	{
+		$this->attributes['firstname'] = strtolower($value);
+	}
+
+	public function setLastnameAttribute($value)
+	{
+		$this->attributes['lastname'] = strtolower($value);
+	}
+
+	public function setGenderAttribute($value)
+	{
+		$this->attributes['gender'] = strtolower($value);
+	}
+
+	public function setOccupationAttribute($value)
+	{
+		$this->attributes['occupation'] = strtolower($value);
+	}
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
