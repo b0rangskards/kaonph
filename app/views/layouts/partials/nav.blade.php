@@ -4,7 +4,7 @@
 <nav class="pushy pushy-left">
     <div class="profile">
     <div class="avatar"><img src="{{asset('images/default-avatar.png')}}" alt="#"></div>
-    <h5 style="text-align: center"><a href="#">{{$currentUser->email}}</a></h5>
+    <h5 style="text-align: center"><a href="#">{{$currentUser->present()->fullName}}</a></h5>
 
      {{-- Logout Button --}}
     {{Form::open(['method' => 'DELETE', 'route' => 'sessions.destroy', 'data-form-remote-no-message-success'])}}

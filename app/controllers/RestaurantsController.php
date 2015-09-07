@@ -205,10 +205,14 @@ class RestaurantsController extends \BaseController {
 		$data['visitors'] = $restaurant->getVisitors();
 		$data['visitorsList'] = $restaurant->getVisitorsListName();
 
+		$data['lovedCustomersList'] = $restaurant->getLovedCustomersList();
+		$data['justFineCustomersList'] = $restaurant->getJustFineCustomersList();
+		$data['dislikeCustomersList'] = $restaurant->getDislikeCustomersList();
+
 		$data['restaurant'] = $restaurant;
 
 		if( !$restaurant->customers()->get()->isEmpty())
-			$data['ratings'] = $restaurant->getRatings(Customer::find($restaurant->id)->get(), $restaurant->id);
+			$data['ratings'] = $restaurant->getRatings(Customer::where('restaurant_id', $restaurant->id)->get(), $restaurant->id);
 
 		return View::make('restaurants.show', $data);
 	}
@@ -321,6 +325,14 @@ class RestaurantsController extends \BaseController {
 					'redirecTo' => URL::route('restaurants.index')];
 
 		return Response::json($message);
+	}
+
+	public function visitorsHistory($id)
+	{
+		$data['restaurant'] = Restaurant::findOrFail($id);
+		$data['visitors'] = $data['restaurant']->getVisitors();
+
+		return View::make('restaurants.visitors-history', $data);
 	}
 
 

@@ -10,8 +10,8 @@
           <div class="list-group">
                 @foreach($visitors as $visitor)
                     <a href="#" class="list-group-item">
-                        {{$visitor->user()->first()->email}}
-                        <span style="color:darkgray;font-size: small">{{Carbon::parse($visitor->date_visited)->diffForHumans()}}</span>
+                        {{$visitor->user()->first()->present()->fullName}}
+                        <span style="color:darkgray;font-size: small;float:right">{{Carbon::parse($visitor->date_visited)->diffForHumans()}}</span>
 
                         <p class="list-group-item-text">...</p>
                     </a>

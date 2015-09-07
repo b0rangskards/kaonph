@@ -4,12 +4,15 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Laracasts\Presenter\PresentableTrait;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-	use UserTrait, RemindableTrait, SoftDeletingTrait;
+	use UserTrait, RemindableTrait, SoftDeletingTrait, PresentableTrait;
 
-    protected $fillable = ['role_id', 'email', 'password', 'firstname', 'lastname', 'birthdate', 'gender', 'occupation'];
+	protected $presenter = 'Acme\Presenters\UserPresenter';
+
+	protected $fillable = ['role_id', 'email', 'password', 'firstname', 'lastname', 'birthdate', 'gender', 'occupation'];
 
     /**
 	 * The database table used by the model.

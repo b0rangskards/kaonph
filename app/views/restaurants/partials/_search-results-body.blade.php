@@ -9,12 +9,8 @@
         </div>
         {{--<p class="lead">Taste you world with wonderful food experience.</p>--}}
 
-             @if($results->count() == 0)
-                     <div class="no-results-panel">
-                         <h2>No results found.</h2>
-                     </div>
-             @else
-                @foreach($results as $restaurant)
+
+                @forelse($results as $restaurant)
 
                 <div class="pg style_list">
                     <!--features-->
@@ -32,14 +28,17 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
-             @endif
+                @empty
+                    <div class="no-results-panel">
+                        <h2>No results found.</h2>
+                    </div>
+                @endforelse
 
     </div>
 
     <!--morebtn-->
-{{--    @if($restaurant->menu()->count() > 3)--}}
+    @if($results->count() > 3)
         <a href="#" class="more_btn">Load more</a>
-    {{--@endif--}}
+    @endif
 
 </div>

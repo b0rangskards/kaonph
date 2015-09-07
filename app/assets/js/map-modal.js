@@ -35,14 +35,11 @@ $(function(){
                 },
                 events: {
                     dragend: function (marker, event, context) {
-                        var newLatLng = {
-                          lat: marker.position.A,
-                          lng: marker.position.F
-                        };
+                        var newLatLng = $.map(marker.position, function(el) { return el; });
 
                         updateMapCenter(this, newLatLng);
 
-                        $('input[name="coordinates"]').val(newLatLng.lat + ',' + newLatLng.lng);
+                        $('input[name="coordinates"]').val(newLatLng[0] + ',' + newLatLng[1]);
                     }
                 }
             }

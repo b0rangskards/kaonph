@@ -13,14 +13,14 @@
 	<div class="similar">
 		<h3>Similar places:</h3>
 
-        @foreach($similar->chunk(5) as $index => $chunksRestau)
+        @foreach($similar->chunk(3) as $index => $chunksRestau)
            @if($index == 0)
                 @foreach($chunksRestau as $restau)
                 <div>
                     <img src="{{$restau->logo ? asset('images/restaurants').'/'.$restau->logo : asset('images/avatar/ava_11.jpg')}}" alt="#">
                     <a href="{{URL::route('restaurants.show', $restau->id)}}">{{$restau->present()->prettyName}}</a>
                     @if(!$restau->getLovedCustomers()->isEmpty())
-                        {{$restau->getLovedCustomers()->count()}} {{Str::plural('users', $restau->getLovedCustomers()->count())}}<i class="fa fa-heart-o"></i> this
+                        <span class="inline-block">{{$restau->getLovedCustomers()->count()}} {{Str::plural('users', $restau->getLovedCustomers()->count())}} <i class="fa fa-heart-o"></i>this</span>
                     @endif
                 </div>
                 @endforeach

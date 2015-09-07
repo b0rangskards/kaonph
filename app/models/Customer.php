@@ -20,6 +20,18 @@ class Customer extends \Eloquent {
 			->count();
 	}
 
+	public function visitHistory()
+	{
+		return static::where('user_id', $this->user_id)
+			->where('restaurant_id', $this->restaurant_id)
+			->get();
+	}
+
+	public function timesVisited()
+	{
+		return $this->visitHistory()->count();
+	}
+
 	public function restaurant()
 	{
 		return $this->belongsTo('Restaurant');

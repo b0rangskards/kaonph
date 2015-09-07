@@ -13,6 +13,7 @@
 
 /* Public Routes for Member/Guest */
 
+use Acme\Helpers\DataHelper;
 use Acme\Restaurants\RestaurantRepository;
 
 /* Member Routes */
@@ -62,6 +63,11 @@ Route::group(['before' => 'auth'], function () {
 	Route::post('/restaurants/updatedetails', [
 		'as'   => 'restaurants.updatedetails',
 		'uses' => 'RestaurantsController@updateRestaurantDetails'
+	]);
+
+	Route::get('/restaurants/{id}/visitors', [
+		'as'   => 'restaurants.visitorshistory',
+		'uses' => 'RestaurantsController@visitorsHistory'
 	]);
 
 	/* Show Visited Restaurants */
@@ -182,9 +188,6 @@ Route::resource('foods', 'FoodsController', [
 ]);
 
 Route::get('/test', function(){
-	$repo = new RestaurantRepository();
-
-	$restaus = $repo->getLovedRestaurants(Auth::user()->id);
-
-	dd($restaus->toArray());
+	dd(DataHelper::getRestaurantsByCurl());
+//dd(Restaurant::isExist('kfc'));
 });

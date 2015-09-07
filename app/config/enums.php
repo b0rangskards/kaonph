@@ -19,10 +19,6 @@ return [
   		'name' => 'Fast Food',
   		'icon' => 'fastfood_ic'
   	],
-  	'buffet'           => [
-  		'name' => 'Buffet',
-  		'icon' => 'buffet_ic'
-  	],
   	'steak house'      => [
   		'name' => 'Steak House',
   		'icon' => 'steak_ic'

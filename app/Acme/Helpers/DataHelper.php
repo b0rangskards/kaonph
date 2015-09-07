@@ -36,11 +36,8 @@ class DataHelper {
 		return explode(',', $point);
 	}
 
-	public static function getRestaurantsByCurl()
+	public static function getRestaurantsByCurl($details_url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=10.30739,123.89728&radius=10000&types=restaurant&sensor=false&key=AIzaSyAsHVLxS6qsR00VdIbOpwnjZD5oeoRlHHg')
 	{
-		$details_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-		$details_url .= "location=10.30739,123.89728&radius=10000&types=restaurant&sensor=false&key=AIzaSyAsHVLxS6qsR00VdIbOpwnjZD5oeoRlHHg";
-
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $details_url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -61,8 +58,29 @@ class DataHelper {
 
 			$places[] = $tempArray;
 		}
+
+		if(isset($result['next_page_token'])) {
+			$url = static::replaceOrAppendPageToken($details_url, $result['next_page_token']);
+			$places =  array_merge($places, static::getRestaurantsByCurl($url));
+		}
 		
 		return $places;
+	}
+
+	public static function replaceOrAppendPageToken($url, $nextPageToken)
+	{
+		$urlArray = explode('&', $url);
+
+		// append if url doesnt have pagetoken parameter
+		if ( count($urlArray) < 6 || strpos($urlArray[5], 'pagetoken') === false ) {
+			return $url.'&pagetoken='.$nextPageToken;
+		}
+
+		$pagetokenArray = explode('=', $urlArray[5]);
+		$pagetokenArray[1] = $nextPageToken;
+		$urlArray[5] = implode('=', $pagetokenArray);
+
+		return implode('&', $urlArray);
 	}
 
 } 

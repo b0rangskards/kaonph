@@ -77,7 +77,10 @@ class RestaurantRepository implements BaseRepositoryInterface {
 
 		$ptBRFaker = Faker::create('pt_BR');
 
-		foreach($restaurants as $restaurant) {
+		foreach($restaurants as $restaurant)
+		{
+			if(Restaurant::isExist($restaurant['name'], $restaurant['address'])) continue;
+
 			$r = new Restaurant();
 			$r->owner_id    = $ownerId;
 			$r->name        = $restaurant['name'];

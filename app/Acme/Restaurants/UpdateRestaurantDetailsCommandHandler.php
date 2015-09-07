@@ -68,10 +68,6 @@ class UpdateRestaurantDetailsCommandHandler implements CommandHandler {
 				->save($thumbnailPath);
 
 			$restaurant->logo = $fileName;
-
-			Log::info($logoPath);
-			Log::info($thumbnailPath);
-			Log::info('saving files');
 		}
 
 		$this->repository->save($restaurant);

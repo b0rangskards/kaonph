@@ -4,6 +4,7 @@ class DatabaseSeeder extends Seeder
 {
 
     protected $tables = [
+	    'users',
         'roles',
 	    'restaurants',
 	    'food_types',

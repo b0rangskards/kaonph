@@ -105,8 +105,8 @@ class Restaurant extends \Eloquent {
 	public function getVisitors()
 	{
 		return Customer::with('user')
+			->distinct('user_id')
 		    ->where('restaurant_id', $this->id)
-			->groupBy('restaurant_id')
 			->orderBy('date_visited', 'DESC')
 			->get();
 	}
@@ -122,36 +122,92 @@ class Restaurant extends \Eloquent {
 			->get();
 		foreach($visitors as $visitor)
 		{
-			$list .= $visitor->user()->first()->email ."\n";
+			$list .= $visitor->user()->first()->present()->fullName ."\n";
 		}
 		return $list;
 	}
 
 	public function getLovedCustomers()
 	{
-		return Customer::distinct()
+//		return Customer::distinct()
+//			->select('user_id')
+//			->where('restaurant_id', $this->id)
+//			->where('rating', '3')
+//			->get();
+
+		return Customer::
+		with('user')
+		->distinct()
 		->select('user_id')
 		->where('restaurant_id', $this->id)
 		->where('rating', '3')
 		->get();
 	}
 
+	public function getLovedCustomersList()
+	{
+		$list = "";
+		foreach($this->getLovedCustomers() as $customer)
+		{
+			$list .= $customer->user->present()->fullName . "<br>";
+		}
+		return $list;
+	}
+
 	public function getJustFineCustomers()
 	{
+//		return Customer::distinct()
+//			->select('user_id')
+//			->where('customers.restaurant_id', $this->id)
+//			->where('customers.rating', '2')
+//			->get();
 		return Customer::distinct()
+			->with('user')
 			->select('user_id')
 			->where('customers.restaurant_id', $this->id)
 			->where('customers.rating', '2')
 			->get();
 	}
 
+	public function getJustFineCustomersList()
+	{
+		$list = "";
+		foreach ( $this->getJustFineCustomers() as $customer ) {
+			$list .= $customer->user->present()->fullName . "<br>";
+		}
+		return $list;
+	}
+
 	public function getDislikeCustomers()
 	{
+//		return Customer::distinct()
+//			->select('user_id')
+//			->where('customers.restaurant_id', $this->id)
+//			->where('customers.rating', '1')
+//			->get();
 		return Customer::distinct()
+			->with('user')
 			->select('user_id')
 			->where('customers.restaurant_id', $this->id)
 			->where('customers.rating', '1')
 			->get();
+	}
+
+	public function getDislikeCustomersList()
+	{
+		$list = "";
+		foreach ( $this->getDislikeCustomers() as $customer ) {
+			$list .= $customer->user->present()->fullName . "<br>";
+		}
+		return $list;
+	}
+
+	public static function isExist($restaurantName, $address)
+	{
+		return !static::where('name', $restaurantName)
+			->where('address', $address)
+			->get()
+			->isEmpty();
 	}
 
 	// todo

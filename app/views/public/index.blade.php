@@ -25,17 +25,21 @@
           </nav>
        <div class="start_descrition option animated fadeInDownBig">
 
-          <a href="#" class="start_logo"><img width="120"src="images/logo.png" alt=""></a>
+          <a href="#" class="start_logo"><img width="120"src="images/logo_orig.png" alt=""></a>
           <h1>welcome to #kaonPH!<span></span></h1>
           <span>Tour with the finest restaurants on Metro Cebu</span>
+
+        <p class="flat-red" style="margin-top: 10px;"><strong>powered by:</strong>
+          <img src="{{asset('images/logo1.png')}}" alt=""/>
+        </p>
 
             <div class="btns">
             {{HTML::link(URL::route('home'), 'Get started', ['class' => 'green'])}}
             {{HTML::link('#', 'Have Restaurant?', ['class' => 'white_border', 'id' => 'register_owner_btn'])}}
             {{HTML::link('#', 'Register', ['class' => 'green', 'id' => 'register_btn'])}}
-{{--            {{HTML::link('#', 'Register', ['class' => 'green', 'data-toggle' => 'modal', 'data-target' => '#register_public_modal'])}}--}}
             </div>
         </div>
+
         <div class="bgg"></div>
 
 

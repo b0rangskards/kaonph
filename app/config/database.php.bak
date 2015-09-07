@@ -54,10 +54,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-            'host'      => 'kaonnavagis.mysql.eu1.frbit.com',
-            'database'  => 'kaonnavagis',
-            'username'  => 'kaonnavagis',
-            'password'  => '8vZwtwyzjvCENR+GqklUGT4c',
+            'host'      => 'kaonph.mysql.eu1.frbit.com',
+            'database'  => 'kaonph',
+            'username'  => 'kaonph',
+            'password'  => '8q0FrUyjzP1gPM3shI2QC1Wj',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

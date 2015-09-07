@@ -39,15 +39,15 @@
 <!--icon description block-->
 <div class="icon_descr_block">
     <div class="cols">
-        <div class="icons id_red">
+        <div class="icons id_red" data-toggle="tooltip" data-html="true" data-placement="top" title="{{$lovedCustomersList}}">
             <span class="ic"><i class="fa fa-heart-o flat-red"></i></span>
             <span class="num">{{$ratings['loved_perc'] or '0'}}%</span>
         </div>
-        <div class="icons id_blue">
+        <div class="icons id_blue" data-toggle="tooltip" data-html="true" data-placement="top" title="{{$justFineCustomersList}}">
             <span class="ic"><i class="fa fa-thumbs-up flat-blue"></i></span>
             <span class="num">{{$ratings['liked_perc']  or '0'}}%</span>
         </div>
-        <div class="icons id_yellow">
+        <div class="icons id_yellow" data-toggle="tooltip" data-html="true" data-placement="top" title="{{$dislikeCustomersList}}">
             <span class="ic"><i class="fa fa-thumbs-down flat-yellow"></i></span>
             <span class="num">{{$ratings['disliked_perc']  or '0'}}%</span>
         </div>
@@ -61,8 +61,9 @@
 
     <div class="cols">
         @if( !$restaurant->isOwner())
-            <a href="{{URL::route('foods.index', $restaurant->id)}}" class="btn-green-border pull-right" >Show Food Menu</a>
+            <a href="{{URL::route('foods.index', $restaurant->id)}}" class="btn-green-border pull-right">Show Food Menu</a>
         @else
+            <a href="{{URL::route('restaurants.visitorshistory', $restaurant->id)}}" class="btn-green-solid pull-right">Visitors History</a>
             <a href="{{URL::route('foods.editmenu', $restaurant->id)}}" class="btn-green-border pull-right" >Edit Food Menu</a>
         @endif
     </div>
@@ -70,33 +71,40 @@
 </div>
 
 <!--Features info instead show foods here -->
-<div class="features_block">
-<div>
-<ul>
-<li>Hours: <b>Closed until 8:00am</b></li>
-<li>Reservations: <b>No</b></li>
-<li>Menus: <b>Brunch</b></li>
-</ul>
-</div>
-<div>
-<ul>
-<li>Credit Cards: <b>Yes (incl. Visa & MasterCard)</b></li>
-<li>Wi-Fi: <b>Yes</b></li>
-<li>Outdoor Seating: <b>No</b></li>
-</ul>
-</div>
-</div>
+{{--<div class="features_block">--}}
+{{--<div>--}}
+{{--<ul>--}}
+{{--<li>Hours: <b>Closed until 8:00am</b></li>--}}
+{{--<li>Reservations: <b>No</b></li>--}}
+{{--<li>Menus: <b>Brunch</b></li>--}}
+{{--</ul>--}}
+{{--</div>--}}
+{{--<div>--}}
+{{--<ul>--}}
+{{--<li>Credit Cards: <b>Yes (incl. Visa & MasterCard)</b></li>--}}
+{{--<li>Wi-Fi: <b>Yes</b></li>--}}
+{{--<li>Outdoor Seating: <b>No</b></li>--}}
+{{--</ul>--}}
+{{--</div>--}}
+{{--</div>--}}
 
 <!--Share this place btn and total visitors-->
 <div class="share_block">
 <div>
 {{--<a href="#" class="green_button">Share this place</a>--}}
 </div>
-<div>
-    <div>
-        <span>Total Visitors</span>
-        <span data-toggle="tooltip" data-placement="bottom" title="{{$visitorsList}}"><a href="#" data-toggle="modal" data-target="#visitors_modal">{{$visitors->count()}} total</a></span>
-    </div>
+<div style="padding: 10px 20px;">
+        <span>Visitors</span> <br/>
+        @forelse($visitors as $index => $visitor)
+            @if($index == 1)
+                and <a href="#" data-toggle="modal" data-target="#visitors_modal" style="margin: 0px;">{{$visitors->count()-1}} {{Str::plural('other',$visitors->count()-1)}}</a>
+                @break
+            @endif
+            <span><a href="" class="inline-block" style="margin: 0px;" data-toggle="modal" data-target="#visitors_modal">{{ $visitor->user->present()->fullName }}</a></span>
+        @empty
+            <span><a href="">Currently no visitors</a></span>
+        @endforelse
+        {{--<span data-toggle="tooltip" data-placement="top" title="{{$visitorsList}}"><a href="#" data-toggle="modal" data-target="#visitors_modal">{{$visitors->count()}} total</a></span>--}}
 </div>
 </div>
 
